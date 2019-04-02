@@ -1,0 +1,42 @@
+{{ include('header.html') }}
+  <div class="container-fluid">
+    <div class="row">
+{{ include('admin-nav.html') }}
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Reports</h1>
+        </div>
+        <table class="table table-light table-striped">
+          <thead class="thead-inverse thead-dark">
+            <tr>
+              <th class="text-center" width="4%">#</th>
+              <th width="20%">Username</th>
+              <th width="80px">Image</th>
+              <th>Reason</th>
+              <th width="5%"></th>
+            </tr>
+          </thead>
+          <tbody>
+{% for report in stuff.reports %}
+            <tr>
+              <th class="text-center" scope="row">{{ report.id }}</th>
+              <td>{{ report.username }}</td>
+              <td><img src="{{ report.thumb_url }}" class="report-image mr-3" alt="..."> </td>
+              <td>{{ report.reason }}</td>
+              <td>
+                <form method="post">
+                  <input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
+                  <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">
+                  <input type="hidden" name="action" value="delete">
+                  <input type="hidden" name="image" value="{{ report.pid }}">
+                  <button type="submit" class="btn btn-secondary btn-sm" role="button" data-toggle="tooltip" data-placement="top" title="Delete Image"><i class="fas fa-trash"></i></button>
+                </form>
+              </td>
+            </tr>
+{% endfor %}
+          </tbody>
+        </table>
+      </main>
+    </div>
+  </div>
+{{ include('footer.html') }}

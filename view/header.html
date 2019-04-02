@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="shortcut icon" type="image/png" href="/img/icon.png"/>
+{% if stuff.vars.pagetitle != null %}
+  <title>{{ siteName }} - {{ stuff.vars.category }}</title>
+{% else %}
+<title>{{ siteName }}</title>
+{% endif %}
+{% if page == 'index' %}
+<style>
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 200;
+  background-color: #7f5a83;
+  background-image: linear-gradient(315deg, #7f5a83 0%, #0d324d 74%);
+  color: #b8b8b8;
+}
+</style>
+{% endif %}
+</head>
+<body class="d-flex flex-column h-100">
+  <div id="container" class="cover-container d-flex w-100 h-100 mx-auto flex-column">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <a class="navbar-brand logolink" href="/"><span class="green">yaih</span><span class="grey">.org</span></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav ml-auto">
+          <a class="nav-item nav-link nav-pink {% if page == 'index' %}active{% endif %}" href="/">Home</a>
+          <a class="nav-item nav-link nav-pink {% if page == 'recent' %}active{% endif %}" href="/recent">Recent</a>
+{% if userlevel < 10 %}
+          <a class="nav-item nav-link nav-pink {% if 'account' in page %}active{% endif %}" href="/account">Account</a>
+{% else %}
+          <a class="nav-item nav-link nav-pink {% if page == 'login' %}active{% endif %}" href="/login">Login</a>
+{% endif %}
+{% if userlevel < 1 %}
+          <a class="nav-item nav-link nav-pink {% if 'admin' in page %}active{% endif %}" href="/admin">Admin</a>
+{% endif %}
+        </div>
+      </div>
+    </nav>
+{% if alerts|length >= 1 %}
+{% for alert in alerts %}
+  <div class="alert w-75 mx-auto mt-3 alert-dismissible fade show alert-{{ alert.0|e }}" role="alert">
+    {{ alert.1|raw }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+{% endfor %}
+{% endif %}

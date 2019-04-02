@@ -1,0 +1,30 @@
+{% if stuff.pageCount > 1 %}
+  {% set nearbyPagesLimit = 4 %}
+  <nav class="pt-3" aria-label="pagination">
+    <ul class="pagination justify-content-center">
+      <li class="page-item {% if stuff.currentPageNo == '1' %}disabled{% endif %}">
+      <a {% if stuff.currentPageNo != '1' %}href="{{ stuff.currentPage }}/{{ stuff.currentPageNo - 1 }}"{% endif %} class="page-link" tabindex="-1" {% if stuff.currentPageNo == '1' %}aria-disabled="true"{% endif %}>Previous</a>
+      </li>
+{% for page in 1..stuff.pageCount %}
+{% if (loop.index == 1) or (loop.index == stuff.pageCount) %} {# Always show page 1 & last page#}
+      <li class="page-item {% if page == stuff.currentPageNo %}active{% endif %}">
+        <a href="{{ stuff.currentPage }}/{{ page }}" class="page-link" aria-label="Page {{ page }}">{{ page }}{% if page == stuff.currentPageNo %} <span class="sr-only">(current)</span>{% endif %}</a>
+      </li>
+{% elseif 0 == (stuff.currentPageNo - nearbyPagesLimit) - loop.index %} {# dot before #}
+<li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+{% elseif 0 == (stuff.currentPageNo + nearbyPagesLimit) - loop.index %} {# dot after #}
+ <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+{% elseif 0 < (stuff.currentPageNo - nearbyPagesLimit) - loop.index %} {# hide all before #}
+{% elseif 0 > (stuff.currentPageNo + nearbyPagesLimit) - loop.index %} {# hide all after #}
+{% else %}
+      <li class="page-item {% if page == stuff.currentPageNo %}active{% endif %}">
+        <a href="{{ stuff.currentPage }}/{{ page }}" class="page-link" aria-label="Page {{ page }}">{{ page }}{% if page == stuff.currentPageNo %} <span class="sr-only">(current)</span>{% endif %}</a>
+      </li>
+{% endif %}
+{% endfor %}
+      <li class="page-item {% if stuff.currentPageNo == stuff.pageCount %}disabled{% endif %}">
+        <a {% if stuff.currentPageNo != stuff.pageCount %}href="{{ stuff.currentPage }}/{{ stuff.currentPageNo + 1 }}"{% endif %} class="page-link">Next</a>
+      </li>
+    </ul>
+  </nav>
+{% endif %}

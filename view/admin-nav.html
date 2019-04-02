@@ -1,0 +1,31 @@
+    <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+      <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link  {% if page == 'admin' %}active{% endif %}" href="/admin">
+              <i class="fas fa-chess"></i>
+              Dashboard {% if page == 'admin' %}<span class="sr-only">(current)</span>{% endif %}</a>
+          </li>
+          <li class="nav-item">
+        <a class="nav-link {% if page == 'admin-images' %}active{% endif %}" href="/admin/images">
+              <i class="fas fa-image"></i>
+          Images{% if page == 'admin-images' %}<span class="sr-only">(current)</span>{% endif %}</a>
+          </li>
+          <li class="nav-item">
+          <a class="nav-link {% if page == 'admin-users' %}active{% endif %}" href="/admin/users">
+              <i class="fas fa-users"></i>
+        Users{% if page == 'admin-users' %}<span class="sr-only">(current)</span>{% endif %}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if page == 'admin-settings' %}active{% endif %}" href="/admin/settings">
+              <i class="fas fa-cogs"></i>
+        Settings{% if page == 'admin-settings' %}<span class="sr-only">(current)</span>{% endif %}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if page == 'admin-reports' %}active{% endif %}" href="/admin/reports">
+              <i class="fas fa-flag"></i>
+        Reports{% if page == 'admin-reports' %}<span class="sr-only">(current)</span>{% endif %}</a>
+          </li>
+        </ul>
+      </div>
+    </nav>

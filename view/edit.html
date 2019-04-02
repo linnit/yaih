@@ -1,0 +1,46 @@
+{{ include('header.html') }}
+	<div class="container">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Edit post</h3>
+				</div>
+				<div class="panel-body">
+					<form method="post">
+						<input type="hidden" name="id" value="{{ stuff.post.id }}">
+						<div class="form-group">
+							<label for="title">Title</label>
+							<input id="input-title" type="text" name="title" class="form-control" placeholder="Post Title" value="{{ stuff.post.title }}">
+						</div>
+						<div class="form-group">
+							<label for="url">URL</label>
+							<input id="input-title" type="text" name="url" class="form-control" placeholder="Post URL" value="{{ stuff.post.url }}">
+						</div>
+						<div class="form-group">
+							<label for="category">Category</label>
+							<select name="category" class="form-control">
+								<option>Category</option> 
+								{% for category in stuff.categories %}
+									{% if stuff.post.category_id == category.id %}
+								<option selected="selected" value="{{ category.id }}">{{ category.name }} </option> 
+									{% else %} 
+								<option value="{{ category.id }}">{{ category.name }} </option> 
+									{% endif %}
+								{% endfor %}
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="content">Content</label>
+							<textarea class="form-control" name="content" rows="15">{{ stuff.post.content|raw }}</textarea>
+						</div>
+						<div class="form-group">
+							<button type="submit" class="btn btn-success">Save</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+{{ include('footer.html') }}
+
+

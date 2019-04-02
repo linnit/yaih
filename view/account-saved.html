@@ -1,0 +1,30 @@
+{{ include('header.html') }}
+<div class="container">
+{{ include('account-nav.html') }}
+<h2 class="pt-3">Saved</h2>
+{% if stuff.posts|length < 1 %}
+You haven't saved any images yet.
+{% else %}
+<ul class="li-history list-unstyled">
+{% for post in stuff.posts %}
+<li class="media mt-2 ">
+  <a href="/img/{{post.url}}"><img src="/t/{{post.url}}" class="img-history mr-3" alt="{{ post.title }}"></a>
+  <div class="media-body">
+    <h5 class="mt-0">{{ post.title }}</h5>
+
+    <form method="post">
+      <input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
+      <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">
+      <input type="hidden" name="image" value="{{ post.id }}">
+      <input type="hidden" name="action" value="unsave">
+      <button type="submit" class="btn btn-sm btn-dark a-btn" role="button" data-toggle="tooltip" data-placement="top" title="Remove save"><i class="far fa-star"></i></button>
+    </form>
+
+    Saved : {{ post.created }}
+  </div>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+</div>
+{{ include('footer.html') }}

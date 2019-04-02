@@ -1,0 +1,93 @@
+<!-- Modal -->
+<div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Report</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="post">
+      <div class="modal-body">
+          <input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
+          <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">
+          <input type="hidden" name="action" value="report">
+          <input type="hidden"id="report_id" name="image" value="image">
+          <select name="reason" class="custom-select">
+            <option selected>Reason</option>
+            <option value="1">Copyright Infringing</option>
+            <option value="2">Illegal</option>
+            <option value="3">Spam</option>
+          </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Report</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% if stuff.images|length < 1 %}
+There are no images to see.
+{% else %}
+  <div class="card-group">
+{% for image in stuff.images %}
+    <div class="card">
+      <a href="/img/{{ image.url }}"><img src="{{ image.thumburl }}.jpg" class="card-img-top" alt="{{ image.title }}"></a>
+      <div class="card-footer py-2">
+        <div class="row justify-content-center">
+        <div class="col-md-auto px-1">
+          <form method="post">
+            <input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
+            <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">
+            <input type="hidden" name="image" value="{{ image.id }}">
+{% if image.saved is defined %}
+            <input type="hidden" name="action" value="unsave">
+            <button type="submit" class="btn btn-sm btn-dark a-btn" role="button" data-toggle="tooltip" data-placement="top" title="Remove save"><i class="far fa-star"></i></button>
+{% else %}
+            <input type="hidden" name="action" value="save">
+            <button type="submit" class="btn btn-sm btn-pink a-btn" role="button" data-toggle="tooltip" data-placement="top" title="Save"><i class="fas fa-star"></i></button>
+{% endif %}
+          </form>
+      </div>
+      <div class="col-md-auto px-1">
+          <button type="button" id="{{ image.id }}" class="btn btn-sm btn-info btn-report" data-toggle="modal" data-target="#reportModal" title="Report"><i class="fas fa-flag"></i></button>
+      </div>
+      <div class="col-md-auto px-1">
+          <a href="/user/{{ image.username }}" class="btn btn-sm btn-secondary a-btn" role="button" data-toggle="tooltip" data-placement="top" title="{{ image.username }}"><i class="fas fa-user"></i></a>
+      </div>
+      <div class="col-md-auto px-1">
+        <span class="btn btn-sm btn-secondary a-btn font-weight-light">{{ image.created }}</span>
+      </div>
+{% if (userlevel < 1) or (userlevel < 10 and username == image.username) %}
+      <div class="col-md-auto px-1">
+        <form method="post">
+          <input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
+          <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">
+          <input type="hidden" name="image" value="{{ image.id }}">
+          <input type="hidden" name="action" value="delete">
+          <button type="submit" class="btn btn-sm btn-pink" role="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash"></i></button>
+        </form>
+      </div>
+{% endif %}
+      </div>
+      </div>
+      <!--<div class="card-footer">
+      </div>-->
+    </div>
+{% endfor %}
+  </div>
+{% endif %}
+{{ include('pagination.html') }}
+<script>
+let reports = document.getElementsByClassName("btn-report");
+let report_id = document.getElementById("report_id");
+
+Array.from(reports).forEach(function(element) {
+  element.addEventListener('click', function() {
+    report_id.value = this.id;
+  });
+});
+</script>

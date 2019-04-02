@@ -1,0 +1,23 @@
+{{ include('header.html') }}
+  <div class="container-fluid">
+    <div class="row">
+{{ include('admin-nav.html') }}
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Edit User</h1>
+        </div>
+        <form class="form-horizontal" method="post" action="">
+          <input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
+          <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">
+        Edit user page!
+          <div class="form-group row justify-content-lg-center">
+            <div class="col col-lg-6">
+              <button type="submit" class="btn btn-secondary btn-block">Update User</button>
+            </div>
+          </div>
+        </form>
+      </main>
+    </div>
+  </div>
+{{ include('footer.html') }}
+

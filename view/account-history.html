@@ -1,0 +1,24 @@
+{{ include('header.html') }}
+
+<div class="container">
+{{ include('account-nav.html') }}
+<h2 class="pt-3">History</h2>
+</div>
+
+{% if stuff.posts|length < 1 %}
+You haven't viewed any items yet.
+{% else %}
+  <div class="container-fluid">
+{% for c_post in stuff.posts|batch(30) %}
+    <div class="row justify-content-center mt-2">
+{% for post in c_post %}
+      <a href="/img/{{post.url}}">
+        <img src="/t/{{post.url}}" class="img-thumbnail">
+      </a>
+{% endfor %}
+    </div>
+{% endfor %}
+  </div>
+{% endif %}
+
+{{ include('footer.html') }}

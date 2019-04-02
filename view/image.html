@@ -1,0 +1,63 @@
+{{ include('header.html') }}
+<div class="card border-none mb-12">
+  <div class="row no-gutters">
+    <div class="col-md-9 bg-secondary">
+{% if stuff.image.mimetype == 'video/mp4' %}
+      <video controls width="100%">
+          <source src="{{stuff.image.full_url}}" type="{{ stuff.image.mimetype}}">
+      </video>
+{% else %}
+      <img src="{{stuff.image.full_url}}" class="img-fluid mx-auto d-block" alt="alt text">
+{% endif %}
+    </div>
+    <div class="col-md-3">
+      <div class="card-body">
+        <p class="card-text">
+        <div class="input-group input-group-md mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-md">Direct</span>
+          </div>
+          <input id="text_full" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-md" value="{{stuff.image.full_url}}">
+          <div class="input-group-append">
+            <button id="but_full" class="btn btn-outline-secondary" type="button" id="button-addon2">Copy</button>
+          </div>
+        </div>
+        <div class="input-group input-group-md mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-md">Full Page</span>
+          </div>
+          <input id="text_iurl" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-md" value="{{stuff.siteurl}}/img/{{stuff.image.url}}">
+          <div class="input-group-append">
+            <button id="but_iurl" class="btn btn-outline-secondary" type="button" id="button-addon2" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="Copied">Copy</button>
+          </div>
+        </div>
+        <p class="card-text"><small class="text-muted">Uploaded {{stuff.image.created}}</small></p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+let in_full = document.getElementById("text_full");
+let in_img = document.getElementById("text_iurl");
+
+let but_full = document.getElementById("but_full");
+let but_img = document.getElementById("but_iurl");
+
+in_full.addEventListener('focus', function() {
+  this.select();
+});
+in_img.addEventListener('focus', function() {
+  this.select();
+});
+
+but_full.addEventListener('click', function() {
+  in_full.select();
+  document.execCommand('copy');
+});
+
+but_img.addEventListener('click', function() {
+  in_img.select();
+  document.execCommand('copy');
+});
+</script>
+{{ include('footer.html') }}

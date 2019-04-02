@@ -1,0 +1,68 @@
+{{ include('header.html') }}
+  <div class="container-fluid">
+    <div class="row">
+{{ include('admin-nav.html') }}
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Users</h1>
+        </div>
+        <table class="table table-light table-striped">
+          <thead class="thead-inverse thead-dark">
+            <tr>
+              <th class="text-center" width="4%">#</th>
+              <th width="20%">Username</th>
+              <th>E-Mail</th>
+              <th width="5%"></th>
+              <th width="5%"></th>
+              <th width="5%"></th>
+            </tr>
+          </thead>
+          <tbody>
+{% for user in stuff.users %}
+            <tr>
+              <th class="text-center" scope="row">{{ user.id }}</th>
+              <td>{{ user.username }}</td>
+              <td>{{ user.email }}</td>
+              <td>
+                <form method="post">
+                  <input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
+                  <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">
+                  <input type="hidden" name="action" value="edituser">
+                  <input type="hidden" name="user" value="{{ user.id }}">
+                  <button type="submit" class="btn btn-secondary btn-sm" role="button" data-toggle="tooltip" data-placement="top" title="Edit user"><i class="fas fa-edit"></i></button>
+                </form>
+              </td>
+              <td>
+                <form method="post">
+                  <input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
+                  <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">
+{% if user.enabled == 1 %}
+                  <input type="hidden" name="action" value="lockuser">
+{% else %}
+                  <input type="hidden" name="action" value="unlockuser">
+{% endif %}
+                  <input type="hidden" name="user" value="{{ user.id }}">
+{% if user.enabled == 1 %}
+                  <button type="submit" class="btn btn-pink btn-sm" role="button" data-toggle="tooltip" data-placement="top" title="Lock user"><i class="fas fa-lock"></i></button>
+{% else %}
+                  <button type="submit" class="btn btn-success btn-sm" role="button" data-toggle="tooltip" data-placement="top" title="Unlock user"><i class="fas fa-lock"></i></button>
+{% endif %}
+                </form>
+              </td>
+              <td>
+                <form method="post">
+                  <input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
+                  <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">
+                  <input type="hidden" name="action" value="deleteuser">
+                  <input type="hidden" name="user" value="{{ user.id }}">
+                  <button type="submit" class="btn btn-danger btn-sm" role="button" data-toggle="tooltip" data-placement="top" title="Remove user"><i class="fas fa-trash"></i></button>
+                </form>
+              </td>
+            </tr>
+{% endfor %}
+          </tbody>
+        </table>
+      </main>
+    </div>
+  </div>
+{{ include('footer.html') }}
