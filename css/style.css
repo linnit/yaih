@@ -258,3 +258,9 @@ footer {
   height: 64px;
   object-fit: cover;
 }
+
+.history-image {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+}

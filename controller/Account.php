@@ -77,19 +77,33 @@ class Account extends Controller
 
         switch ($vars["action"]) {
             case null:
-                $this->parent->image->imageCards($vars, "account", "/account/images",
-                    $this->model->user->uid);
+                $this->parent->image->imageCards(
+                    $vars,
+                    "account",
+                    "/account/images",
+                    $this->model->user->uid
+                );
                 break;
             case 'images':
-                $this->parent->image->imageCards($vars, "account", "/account/images",
-                    $this->model->user->uid);
+                $this->parent->image->imageCards(
+                    $vars,
+                    "account",
+                    "/account/images",
+                    $this->model->user->uid
+                );
                 break;
             case 'saved':
                 $this->savedGetRequest($vars);
                 break;
             case 'history':
-                $posts = $this->model->image->getHistory($uid);
-                $this->view->render("account-history", array("posts" => $posts));
+                $pageNumber = $this->getPageNumber($vars);
+                $posts = $this->model->image->getHistory($uid, $pageNumber);
+                $pages = $this->model->image->getHistoryPageCount($uid);
+
+                $this->view->render("account-history", array("posts" => $posts,
+                        "currentPage" => "/account/history",
+                        "currentPageNo" => $pageNumber,
+                        "pageCount" => $pages));
                 break;
             case 'submitted':
                 $this->view->render("account-submitted");

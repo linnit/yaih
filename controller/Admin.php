@@ -114,7 +114,8 @@ class Admin extends Controller
      * Handle POST requests to /admin/reports
      *
      */
-    public function postManageReports() {
+    public function postManageReports()
+    {
         switch ($_POST["action"]) {
             case 'delete':
                 $this->model->image->deleteImage($_POST["image"]);
@@ -221,7 +222,8 @@ class Admin extends Controller
      *
      * @param arr $vars
      */
-    public function reportsGetRequest($vars) {
+    public function reportsGetRequest($vars)
+    {
         $name = "reports_" . mt_rand(0, mt_getrandmax());
         $token = $this->view->csrf_generate_token($name);
 
@@ -235,6 +237,5 @@ class Admin extends Controller
             "pageCount" => $pages,
             "currentPageNo" => $page,
             "currentPage" => "/admin/reports"));
-
     }
 }

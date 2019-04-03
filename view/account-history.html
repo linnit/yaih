@@ -9,16 +9,16 @@
 You haven't viewed any items yet.
 {% else %}
   <div class="container-fluid">
-{% for c_post in stuff.posts|batch(30) %}
-    <div class="row justify-content-center mt-2">
-{% for post in c_post %}
+    <div class="row justify-content-around mt-2">
+{% for post in stuff.posts %}
       <a href="/img/{{post.url}}">
-        <img src="/t/{{post.url}}" class="img-thumbnail">
+        <img src="/t/{{post.url}}" class="img-thumbnail history-image mb-2">
       </a>
 {% endfor %}
     </div>
-{% endfor %}
   </div>
 {% endif %}
+
+{{ include('pagination.html') }}
 
 {{ include('footer.html') }}

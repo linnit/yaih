@@ -41,7 +41,7 @@ class Image extends Model
             }
         }
 
-        if (is_null($page)) {
+        if (empty($page)) {
             $page = 0;
         } else {
             $page = ($page-1) * $this->itemPerPage;
@@ -73,7 +73,7 @@ class Image extends Model
      */
     public function getRecentImages($uid = null, $page = null)
     {
-        if (is_null($page)) {
+        if (empty($page)) {
             $page = 0;
         } else {
             $page = ($page-1) * $this->itemPerPage;
@@ -216,7 +216,8 @@ class Image extends Model
      *
      * @return int User ID
      */
-    public function getImageOwner($imageId) {
+    public function getImageOwner($imageId)
+    {
         $stmt = $this->db->prepare("SELECT uid FROM post WHERE id = :id");
         $stmt->bindValue(":id", $imageId);
         $stmt->execute();
@@ -336,25 +337,6 @@ class Image extends Model
         }
     }
 
-    /**
-     * [addProductFeature description]
-     * @param int $id      [description]
-     * @param str $feature [description]
-     */
-    public function addProductFeature($id, $feature)
-    {
-        try {
-            $stmt = $this->db->prepare("INSERT INTO product_features VALUES(NULL, :pid, :feature);");
-            $stmt->bindValue(":pid", $id);
-            $stmt->bindValue(":feature", $feature);
-
-            $stmt->execute();
-        } catch (\PDOException $e) {
-            $this->checkTablesExist();
-            return $this->addProductFeature($id, $feature);
-        }
-    }
-
     /*
      * Get the page count of images for a given user
      *
@@ -382,6 +364,11 @@ class Image extends Model
         return $totalPages;
     }
 
+    /**
+     * Get the page count of images given user has saved
+     *
+     * @param int $uid
+     */
     public function getSavedPageCount($uid)
     {
         $stmt = $this->db->prepare("SELECT count(*) FROM post,saved WHERE post.id = saved.pid AND saved.uid = :uid");
@@ -460,10 +447,21 @@ class Image extends Model
     }
 
 
-    public function getHistory($uid)
+    /**
+     * Get all images user has saved in their history
+     *
+     * @param int $uid User ID to get history of
+     *
+     * @return arr $posts Images user has viewed
+     */
+    public function getHistory($uid, $page)
     {
-        $page = 0;
-    
+        if (empty($page)) {
+            $page = 0;
+        } else {
+            $page = ($page-1) * $this->itemPerPage;
+        }
+ 
         $stmt = $this->db->prepare("SELECT post.id,
       post.uid,
       post.title,
@@ -481,6 +479,34 @@ class Image extends Model
 
         return $posts;
     }
+
+    /**
+     * Get page count of users history
+     *
+     * @param int $uid
+     *
+     * @return int 
+     */
+    public function getHistoryPageCount($uid) {
+        if (is_null($uid)) {
+            if ($this->parent->user->userLoggedin) {
+                $uid = $this->parent->user->uid;
+            } else {
+                return false;
+            }
+        }
+ 
+        $stmt = $this->db->prepare("SELECT count(id) FROM history WHERE uid = :uid");
+        $stmt->bindValue(":uid", $uid, \PDO::PARAM_INT);
+        $stmt->execute();
+        $count = $stmt->fetch();
+
+        $totalPages = ceil($count[0] / 24);
+
+        return $totalPages;
+    }
+
+
 
     public function getSaved($uid, $page = null)
     {
@@ -597,7 +623,6 @@ class Image extends Model
         } else {
             header('Location: ' . $_SERVER['HTTP_REFERER']);
         }
-
     }
 
     /**
@@ -605,7 +630,8 @@ class Image extends Model
      *
      * @param int $id Report to delete
      */
-    public function deleteReport($id) {
+    public function deleteReport($id)
+    {
         $stmt = $this->db->prepare("DELETE FROM reports WHERE id = :id");
         $stmt->bindValue("id", $id);
 

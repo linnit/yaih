@@ -41,7 +41,8 @@ class Site extends Model
      *
      * @return arr reports
      */
-    public function getAllReports($page = null) {
+    public function getAllReports($page = null)
+    {
         if (is_null($page)) {
             $page = 0;
         } else {
@@ -68,7 +69,8 @@ class Site extends Model
      * getReportsPageCount
      *
      */
-    public function getReportsPageCount() {
+    public function getReportsPageCount()
+    {
         $stmt = $this->db->prepare("SELECT count(*) FROM reports");
 
         $stmt->execute();
