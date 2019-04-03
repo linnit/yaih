@@ -9,11 +9,12 @@ class Admin extends Controller
      * @param obj $model Load the model object
      * @param obj $view  Load the view object
      */
-    public function __construct($model, $view, $account)
+    public function __construct($model, $view, $account, $image)
     {
         $this->model = $model;
         $this->view = $view;
         $this->account = $account;
+        $this->image = $image;
     }
 
     /**
@@ -189,29 +190,6 @@ class Admin extends Controller
     }
 
     /**
-     * viewImages
-     *
-     * @param mixed $vars
-     */
-    public function viewImages($vars)
-    {
-        $page = $this->getPageNumber($vars);
-
-        $pages = $this->model->image->getPageCount();
-        $posts = $this->model->image->getRecentImages(null, $page);
-
-        $csrfName = "admin_" . mt_rand(0, mt_getrandmax());
-        $csrfToken = $this->view->csrf_generate_token($csrfName);
-
-        $this->view->render("admin", array("images" => $posts,
-            "CSRFName" => $csrfName,
-            "CSRFToken" => $csrfToken,
-            "pageCount" => $pages,
-            "currentPageNo" => $page,
-            "currentPage" => "/admin/images"));
-    }
-
-    /**
      * Direct all GET requests to relevant function
      *
      * @param  arr $vars Array of URL values
@@ -222,10 +200,10 @@ class Admin extends Controller
     {
         switch ($vars["action"]) {
         case null:
-            $this->viewImages($vars);
+            $this->image->imageCards($vars, "admin", "/admin/images");
             break;
         case 'images':
-            $this->viewImages($vars);
+            $this->image->imageCards($vars, "admin", "/admin/images");
             break;
         case 'edituser':
             if (!isset($vars["variable"])) {
@@ -272,9 +250,14 @@ class Admin extends Controller
 
             $page = $this->getPageNumber($vars);
             $reports = $this->model->site->getAllReports($page);
+            $pages = $this->model->site->getReportsPageCount();
 
             $this->view->render("admin-reports", array("CSRFName" => $name,
-                "CSRFToken" => $token, "reports" => $reports));
+                "CSRFToken" => $token,
+                "reports" => $reports,
+                "pageCount" => $pages,
+                "currentPageNo" => $page,
+                "currentPage" => "/admin/reports"));
             break;
         default:
             echo "Hit default case";

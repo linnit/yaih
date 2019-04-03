@@ -65,6 +65,21 @@ class Site extends Model
     }
 
     /**
+     * getReportsPageCount
+     *
+     */
+    public function getReportsPageCount() {
+        $stmt = $this->db->prepare("SELECT count(*) FROM reports");
+
+        $stmt->execute();
+        $count = $stmt->fetch();
+
+        $totalPages = ceil($count[0] / 20);
+
+        return $totalPages;
+    }
+
+    /**
      * updateMaintenanceMode Update the maintenance setting value in the database
      *
      * @param int $status Status to set the site

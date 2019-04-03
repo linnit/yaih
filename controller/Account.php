@@ -76,10 +76,12 @@ class Account extends Controller
 
         switch ($vars["action"]) {
             case null:
-                $this->viewImages($vars);
+                $this->parent->image->imageCards($vars, "account", "/account/images",
+                    $this->model->user->uid);
                 break;
             case 'images':
-                $this->viewImages($vars);
+                $this->parent->image->imageCards($vars, "account", "/account/images",
+                    $this->model->user->uid);
                 break;
             case 'saved':
                 $this->savedGetRequest($vars);
@@ -132,33 +134,7 @@ class Account extends Controller
                             "pageCount" => $pages));
     }
 
-    /**
-     * viewImages
-     *
-     * @param mixed $vars
-     */
-    public function viewImages($vars)
-    {
-        $page = $this->getPageNumber($vars);
-
-        $uid = $this->model->user->uid;
-
-        $pages = $this->model->image->getUserPageCount();
-        //$posts = $this->model->image->getUserImages(null, $page);
-        $posts = $this->model->image->getRecentImages($uid, $page);
-
-        $csrfName = "account_" . mt_rand(0, mt_getrandmax());
-        $csrfToken = $this->view->csrf_generate_token($csrfName);
-
-        $this->view->render("account", array("images" => $posts,
-            "CSRFName" => $csrfName,
-            "CSRFToken" => $csrfToken,
-            "pageCount" => $pages,
-            "currentPageNo" => $page,
-            "currentPage" => "/account/images"));
-    }
-
-    /**
+    /*
      *
      * @param int $id Image id to save
      */

@@ -185,24 +185,7 @@ class Pages extends Controller
             return 0;
         }
 
-        if (isset($vars["pageno"])) {
-            $page = $vars["pageno"];
-        } else {
-            $page = 1;
-        }
-
-        $pages = $this->model->image->getPageCount();
-        $posts = $this->model->image->getRecentImages(null, $page);
-
-        $csrfName = "recent_" . mt_rand(0, mt_getrandmax());
-        $csrfToken = $this->view->csrf_generate_token($csrfName);
-
-        $this->view->render("recent", array("images" => $posts,
-            "CSRFName" => $csrfName,
-            "CSRFToken" => $csrfToken,
-            "pageCount" => $pages,
-            "currentPageNo" => $page,
-            "currentPage" => "/recent"));
+        $this->image->imageCards($vars, "recent", "/recent");
     }
 
     /**

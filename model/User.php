@@ -459,11 +459,6 @@ class User extends Model
             return false;
         }
 
-        // [todo] maybe don't require IP addr. to match
-        if ($row["ip"] != $_SERVER["REMOTE_ADDR"]) {
-            return false;
-        }
-
         $this->uid = $row["uid"];
         $this->updateIDs();
 

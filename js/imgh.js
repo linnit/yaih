@@ -69,3 +69,17 @@ document.addEventListener("dragend", function() {
 }, false);
 /* End of file drag/drop */
 
+// Button tooltips
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
+
+// popovers
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+
+$('.popover-dismiss').popover({
+  trigger: 'focus'
+})

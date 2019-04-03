@@ -51,23 +51,52 @@ class Image extends Controller
     }
 
     /**
+     * imageCards
+     *
+     * @param arr $vars
+     * @param str $pageName
+     * @param str $url
+     */
+    public function imageCards($vars, $pageName, $url, $uid = null)
+    {
+        $page = $this->getPageNumber($vars);
+
+        if (is_null($uid)) {
+            $pages = $this->model->image->getPageCount();
+        } else {
+            $pages = $this->model->image->getUserPageCount();
+        }
+
+        $posts = $this->model->image->getRecentImages($uid, $page);
+
+        $csrfName = $pageName . "_" . mt_rand(0, mt_getrandmax());
+        $csrfToken = $this->view->csrf_generate_token($csrfName);
+
+        $this->view->render($pageName, array("images" => $posts,
+            "CSRFName" => $csrfName,
+            "CSRFToken" => $csrfToken,
+            "pageCount" => $pages,
+            "currentPageNo" => $page,
+            "currentPage" => $url));
+    }
+
+    /**
      * hasImagePermission
      *
      * @param int $imageId
      *
      * @return bool whether the user has permission to edit the image
      */
-    function hasImagePermission($imageId) {
+    public function hasImagePermission($imageId)
+    {
         // If user is not logged in
         if (!$this->model->user->userLoggedin) {
             return false;
         }
-        $uid = $this->model->user->uid;  
+        $uid = $this->model->user->uid;
 
         $imageOwner = $this->model->image->getImageOwner($imageId);
 
         return ($uid == $imageOwner);
     }
-
-
 }

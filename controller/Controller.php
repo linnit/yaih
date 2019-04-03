@@ -16,9 +16,12 @@ class Controller
         $this->model = new \YAIH\Model\Model();
         $this->view = new \YAIH\Controller\View($this->model);
         $this->account = new \YAIH\Controller\Account($this->model, $this->view, $this);
-        $this->admin = new \YAIH\Controller\Admin($this->model, $this->view, $this->account);
         $this->upload = new \YAIH\Controller\Upload($this->model, $this->view);
         $this->image = new \YAIH\Controller\Image($this->model, $this->view, $this->account);
+        $this->admin = new \YAIH\Controller\Admin($this->model,
+            $this->view,
+            $this->account,
+            $this->image);
         $this->pages = new \YAIH\Controller\Pages(
             $this->model,
             $this->view,
