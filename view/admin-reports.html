@@ -29,6 +29,7 @@
                   <input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
                   <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">
                   <input type="hidden" name="action" value="delete">
+                  <input type="hidden" name="report" value="{{ report.id }}">
                   <input type="hidden" name="image" value="{{ report.pid }}">
                   <button type="submit" class="btn btn-warning btn-sm" role="button" data-toggle="tooltip" data-placement="top" title="Delete Image"><i class="fas fa-trash"></i></button>
                 </form>
@@ -37,9 +38,9 @@
                 <form method="post">
                   <input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
                   <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">
-                  <input type="hidden" name="action" value="delete">
-                  <input type="hidden" name="image" value="{{ report.pid }}">
-                  <button type="submit" class="btn btn-secondary btn-sm" role="button" data-toggle="tooltip" data-placement="top" title="Delete Image"><i class="fas fa-times"></i></button>
+                  <input type="hidden" name="action" value="delete_report">
+                  <input type="hidden" name="report" value="{{ report.id }}">
+                  <button type="submit" class="btn btn-secondary btn-sm" role="button" data-toggle="tooltip" data-placement="top" title="Delete Report"><i class="fas fa-times"></i></button>
                 </form>
               </td>
             </tr>

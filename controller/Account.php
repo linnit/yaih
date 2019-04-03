@@ -9,10 +9,11 @@ namespace YAIH\Controller;
 class Account extends Controller
 {
     /**
-     * Construct Admin object
+     * Construct Account object
      *
      * @param obj $model Load the model object
      * @param obj $view  Load the view object
+     * @param obj $parent  Load the parent object
      */
     public function __construct($model, $view, $parent)
     {
@@ -67,7 +68,7 @@ class Account extends Controller
     public function handleGetRequest($vars)
     {
         if (!$this->model->user->userLoggedin) {
-            $this->model->setAlert("warning", "You need to be logged in to save items.");
+            $this->model->setAlert("warning", "You need to be logged in to view this page");
             header("Location: /login");
             return false;
         }
@@ -97,7 +98,8 @@ class Account extends Controller
                 $this->view->render("account-settings");
                 break;
             default:
-                echo "Hit default case";
+                $this->view->render("404");
+                break;
         }
     }
 

@@ -168,6 +168,13 @@ class Controller
         return array($actions, $vars);
     }
 
+    /**
+     * Using URL variables, determine page number
+     *
+     * @param arr $vars
+     *
+     * @return int User's current page number
+     */
     public function getPageNumber($vars)
     {
         if (isset($vars["variable"])) {

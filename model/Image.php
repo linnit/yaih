@@ -323,7 +323,11 @@ class Image extends Model
         $stmt->bindValue(":id", $id);
         $stmt->execute();
 
-        $this->parent->setAlert("success", "Deleted image");
+        if ($stmt->rowCount()) {
+            $this->parent->setAlert("success", "Deleted image");
+        } else {
+            $this->parent->setAlert("warning", "Deleting image failed");
+        }
 
         if (!isset($_SERVER['HTTP_REFERER'])) {
             header('Location: /account');
@@ -564,6 +568,12 @@ class Image extends Model
         $stmt->execute();
     }
 
+    /**
+     * Add image report to database table
+     *
+     * @param int $pid Image ID
+     * @param int $reason Reason ID
+     */
     public function reportImage($pid, $reason)
     {
         if (!$this->parent->user->userLoggedin) {
@@ -588,5 +598,29 @@ class Image extends Model
             header('Location: ' . $_SERVER['HTTP_REFERER']);
         }
 
+    }
+
+    /**
+     * Delete given report
+     *
+     * @param int $id Report to delete
+     */
+    public function deleteReport($id) {
+        $stmt = $this->db->prepare("DELETE FROM reports WHERE id = :id");
+        $stmt->bindValue("id", $id);
+
+        $stmt->execute();
+
+        if ($stmt->rowCount()) {
+            $this->parent->setAlert("success", "Deleted report");
+        } else {
+            $this->parent->setAlert("warning", "Failed to delete report");
+        }
+
+        if (!isset($_SERVER['HTTP_REFERER'])) {
+            header('Location: /account');
+        } else {
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+        }
     }
 }

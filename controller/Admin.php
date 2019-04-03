@@ -8,6 +8,8 @@ class Admin extends Controller
      *
      * @param obj $model Load the model object
      * @param obj $view  Load the view object
+     * @param obj $account  Load the account object
+     * @param obj $image  Load the image object
      */
     public function __construct($model, $view, $account, $image)
     {
@@ -15,32 +17,6 @@ class Admin extends Controller
         $this->view = $view;
         $this->account = $account;
         $this->image = $image;
-    }
-
-    /**
-     * Handle POST requests to /addproduct page
-     *
-     * @return bool Status of action
-     */
-    public function postAddProduct()
-    {
-        $productId = $this->model->product->addNewProduct(
-            $_POST["product"],
-            $_POST["description"],
-            $_POST["price"],
-            $_POST["stripe_sub_plan"]
-        );
-
-        for ($i = 0; $i <= $_POST["no_features"]; $i++) {
-            if (isset($_POST["feature".$i])) {
-                if ($_POST["feature".$i] == "") {
-                    continue;
-                }
-                $this->model->product->addProductFeature($productId, $_POST["feature".$i]);
-            }
-        }
-        $this->model->setAlert("success", "Added new product!");
-        header('Location: /admin/addproduct');
     }
 
     /**
@@ -108,48 +84,17 @@ class Admin extends Controller
                     header('Location: /admin/users');
                     return false;
                 }
-                // no break
+                break;
             default:
-              echo "Default case for users";
-              break;
+                echo "Default case for users";
+                break;
         }
     }
 
     /**
-     * Handle POST requests to /manageproducts
+     * Handle POST requests to /admin & /admin/images
      *
-     * @return bool Status of action
      */
-    public function postManageProducts()
-    {
-        switch ($_POST["action"]) {
-            case 'deleteproduct':
-                if ($this->model->product->deleteProduct($_POST["product"])) {
-                    $this->model->setAlert("success", "Deleted Product");
-                    header('Location: /admin/manageproducts');
-                    return true;
-                } else {
-                    $this->model->setAlert("warning", "Problem deleting product");
-                    header('Location: /admin/manageproducts');
-                    return false;
-                }
-            break;
-            case 'editproduct':
-                if ($this->model->product->productIdExists($_POST["product"])) {
-                    header("Location: /admin/editproduct/".$_POST["product"]);
-                    return true;
-                } else {
-                    $this->model->setAlert("warning", "Product does not exist");
-                    header("Location: /admin/manageproducts");
-                    return false;
-                }
-                break;
-            default:
-                echo "Default case for manageproducts";
-                break;
-        }
-    }
-
     public function postManageAdmin()
     {
         switch ($_POST["action"]) {
@@ -161,6 +106,24 @@ class Admin extends Controller
                 break;
             case 'unsave':
                 $this->account->unsave($_POST['image']);
+                break;
+        }
+    }
+
+    /**
+     * Handle POST requests to /admin/reports
+     *
+     */
+    public function postManageReports() {
+        switch ($_POST["action"]) {
+            case 'delete':
+                $this->model->image->deleteImage($_POST["image"]);
+                // After the image is delete,
+                // we might as well remove the report
+                $this->model->image->deleteReport($_POST["report"]);
+                break;
+            case 'delete_report':
+                $this->model->image->deleteReport($_POST["report"]);
                 break;
         }
     }
@@ -181,6 +144,9 @@ class Admin extends Controller
                 case 'settings':
                     $this->postManageSettings();
                     break;
+                case 'reports':
+                    $this->postManageReports();
+                    break;
                 case null:
                     $this->postManageAdmin();
                     break;
@@ -200,8 +166,6 @@ class Admin extends Controller
     {
         switch ($vars["action"]) {
         case null:
-            $this->image->imageCards($vars, "admin", "/admin/images");
-            break;
         case 'images':
             $this->image->imageCards($vars, "admin", "/admin/images");
             break;
@@ -245,22 +209,32 @@ class Admin extends Controller
                 "CSRFToken" => $token, "maintenance" => $maintenance));
             break;
         case 'reports':
-            $name = "reports_" . mt_rand(0, mt_getrandmax());
-            $token = $this->view->csrf_generate_token($name);
-
-            $page = $this->getPageNumber($vars);
-            $reports = $this->model->site->getAllReports($page);
-            $pages = $this->model->site->getReportsPageCount();
-
-            $this->view->render("admin-reports", array("CSRFName" => $name,
-                "CSRFToken" => $token,
-                "reports" => $reports,
-                "pageCount" => $pages,
-                "currentPageNo" => $page,
-                "currentPage" => "/admin/reports"));
+            $this->reportsGetRequest($vars);
             break;
         default:
             echo "Hit default case";
         }
+    }
+
+    /**
+     * Handle GET requests to /admin/reports
+     *
+     * @param arr $vars
+     */
+    public function reportsGetRequest($vars) {
+        $name = "reports_" . mt_rand(0, mt_getrandmax());
+        $token = $this->view->csrf_generate_token($name);
+
+        $page = $this->getPageNumber($vars);
+        $reports = $this->model->site->getAllReports($page);
+        $pages = $this->model->site->getReportsPageCount();
+
+        $this->view->render("admin-reports", array("CSRFName" => $name,
+            "CSRFToken" => $token,
+            "reports" => $reports,
+            "pageCount" => $pages,
+            "currentPageNo" => $page,
+            "currentPage" => "/admin/reports"));
+
     }
 }
