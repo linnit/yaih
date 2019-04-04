@@ -26,49 +26,9 @@ class Image extends Model
     }
 
     /**
-     * getUserImages Get uploaded images from given user
-     *
-     * @param int $uid User id
-     * @param int $page Page
-     */
-    public function getUserImages($uid = null, $page = null)
-    {
-        if (is_null($uid)) {
-            if ($this->parent->user->userLoggedin) {
-                $uid = $this->parent->user->uid;
-            } else {
-                return false;
-            }
-        }
-
-        if (empty($page)) {
-            $page = 0;
-        } else {
-            $page = ($page-1) * $this->itemPerPage;
-        }
-
-        $stmt = $this->db->prepare("SELECT post.id, uid, title, url, created, username FROM post INNER JOIN user ON post.uid = user.id WHERE uid = :uid ORDER BY created DESC LIMIT :page,:ipp");
-
-        $stmt->bindValue(":uid", $uid, \PDO::PARAM_INT);
-        $stmt->bindValue(":page", $page, \PDO::PARAM_INT);
-        $stmt->bindValue(":ipp", $this->itemPerPage, \PDO::PARAM_INT);
-        $stmt->execute();
-
-        $posts = $stmt->fetchAll();
-
-        foreach ($posts as $i => $post) {
-            $posts[$i]["fullurl"] = "{$this->parent->siteURL}/i/{$post["url"]}";
-            $posts[$i]["thumburl"] = "{$this->parent->siteURL}/t/{$post["url"]}";
-        }
-        return $posts;
-    }
-
-    /**
      * getRecentImages
      *
-     * @todo still get images if no user..
-     *
-     * @param int $uid (todo) do we need this is we've got getUserImages
+     * @param int $uid Optional - User ID
      * @param int $page
      */
     public function getRecentImages($uid = null, $page = null)

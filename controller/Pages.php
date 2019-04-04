@@ -159,7 +159,6 @@ class Pages extends Controller
 
         $pages = $this->model->image->getUserPageCount($uid);
         $posts = $this->model->image->getRecentImages($uid, $page);
-        //$posts = $this->model->image->getUserImages($uid, $page);
 
         $csrfName = "user_" . mt_rand(0, mt_getrandmax());
         $csrfToken = $this->view->csrf_generate_token($csrfName);
