@@ -198,12 +198,11 @@ class User extends Model
             $email = null;
         }
 
-        if (is_null($password)) {
-            $this->setAlert('danger', "Passwords field empty");
+        if (empty($password)) {
+            $this->setAlert('danger', "Password field empty");
             return false;
         } elseif ($password !== $repeatpassword) {
-            // todo - remove $password
-            $this->setAlert('danger', "Passwords don't match". $password . $repeatpassword);
+            $this->setAlert('danger', "Passwords don't match");
             return false;
         }
 

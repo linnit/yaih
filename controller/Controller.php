@@ -32,9 +32,6 @@ class Controller
             $this->upload,
             $this->image
         );
-
-        // [todo] what is this for
-        $this->actioned		= false;
     }
 
     /**

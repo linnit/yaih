@@ -8,4 +8,3 @@ require 'controller/Controller.php';
 
 $controller = new \YAIH\Controller\Controller();
 $controller->invoke();
-
