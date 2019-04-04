@@ -58,28 +58,39 @@ function handleDrag(event) {
   //document.getElementById("drag_box").style.display = "unset";
 }
 
-document.getElementById("file").addEventListener("change", handleFile, false);
+if (document.getElementById("file")) {
+    document.getElementById("file").addEventListener("change", handleFile, false);
 
-document.addEventListener("drop", handleDrop, false);
-document.addEventListener("dragover", handleDrag, false);
+    document.addEventListener("drop", handleDrop, false);
+    document.addEventListener("dragover", handleDrag, false);
 
-document.addEventListener("dragend", function() {
-  console.log('dragend');
-  //document.getElementById("drag_box").style.display = "none";
-}, false);
+    document.addEventListener("dragend", function() {
+      console.log('dragend');
+      //document.getElementById("drag_box").style.display = "none";
+    }, false);
+}
+
 /* End of file drag/drop */
 
-// Button tooltips
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
 
 
-// popovers
-$(function () {
-  $('[data-toggle="popover"]').popover()
-})
 
-$('.popover-dismiss').popover({
-  trigger: 'focus'
-})
+
+$(document).ready(function () {
+    // Button tooltips
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+
+
+    // popovers
+    $(function () {
+      $('[data-toggle="popover"]').popover()
+    })
+
+    $('.popover-dismiss').popover({
+      trigger: 'focus'
+    })
+});
+
+
