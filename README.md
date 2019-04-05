@@ -12,6 +12,10 @@ Clone the repository, create/import the database, create a database user and con
     cp .env.example ../.env
     vim ../.env
 
+Create image and thumbnail directories
+
+    ./mkdirs.sh
+
 Install Composer (https://getcomposer.org/doc/00-intro.md) and install the defined dependencies
 
     php composer.phar install
@@ -21,7 +25,7 @@ The default username and password:
 admin@example.com
 admin
 
-Apache Config
+### Apache Config
 
 Replace `{DocumentRoot}` with your document root
 
