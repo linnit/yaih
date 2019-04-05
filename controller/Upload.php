@@ -46,14 +46,11 @@ class Upload extends Controller
 
         $filename = basename($filepath);
 
-        //var_dump($mimeType);
-        //exit;
-
         if ($mimeType != 'image/jpeg'
             && $mimeType != 'image/png'
             && $mimeType != 'video/mp4'
             && $mimeType != 'image/gif') {
-            $this->model->setAlert("warning", "Only png/jpg/gif images can be uploaded");
+            $this->model->setAlert("warning", "Only png/jpg/gif/mp4 images can be uploaded");
             header('Location: /');
             exit;
         }

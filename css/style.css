@@ -89,9 +89,7 @@ a, .nav-pink {
   z-index: -1;
 }
 .upload-form {
-  width: 400px;
   text-align: center;
-  margin: auto;
 }
 .upload-box {
   border: 3px dashed #b8b8b8;
@@ -119,6 +117,7 @@ a, .nav-pink {
   border: solid 1px #FC9842;
 }
 #mapped_image {
+  width: 50%;
   max-width: 350px;
 }
 

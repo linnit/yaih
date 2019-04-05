@@ -23,14 +23,6 @@ class Image extends Controller
 
     public function handlePostRequest()
     {
-        if (isset($_POST['image'])) {
-            if (!$this->hasImagePermission($_POST['image'])) {
-                $this->model->setAlert("warning", "You do not have permission to edit this item");
-                header('Location: /');
-                return true;
-            }
-        }
-
         switch ($_POST['action']) {
             case 'save':
                 $this->account->save($_POST['image']);
@@ -39,13 +31,18 @@ class Image extends Controller
                 $this->account->unsave($_POST['image']);
                 break;
             case 'delete':
+                if (!$this->hasImagePermission($_POST['image'])) {
+                    $this->model->setAlert("warning", "You do not have permission to edit this item");
+                    $this->redirectBack();
+                    return true;
+                }
+
                 $this->model->image->deleteImage($_POST["image"]);
                 break;
             case 'report':
                 $this->model->image->reportImage($_POST["image"], $_POST["reason"]);
                 break;
             default:
-                echo 'Default case on recent';
                 break;
             }
     }

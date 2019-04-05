@@ -186,4 +186,17 @@ class Controller
 
         return $page;
     }
+
+    /**
+     * Redirect user back to where they came from
+     *
+     */
+    public function redirectBack()
+    {
+        if (!isset($_SERVER['HTTP_REFERER'])) {
+            header('Location: /');
+        } else {
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+        }
+    }
 }

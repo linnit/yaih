@@ -626,4 +626,61 @@ class User extends Model
 
         return $stmt->rowCount() ? true : false;
     }
+
+    /**
+     * Get user history setting from database
+     *
+     * @param int $uid
+     *
+     * @return
+     */
+    public function getUserHistorySetting($uid)
+    {
+        $stmt = $this->db->prepare("SELECT value FROM user_settings WHERE setting='save_history' AND uid = :uid");
+        $stmt->bindValue(":uid", $uid);
+        $stmt->execute();
+
+        $val = $stmt->fetch();
+
+        // No setting exists
+        if (!$val) {
+            return false;
+        }
+
+        return $val["value"];
+    }
+
+    /**
+     * Update user's history setting
+     *
+     * @param int $uid User ID
+     * @param int $value New value
+     */
+    public function setUserHistorySetting($uid, $value)
+    {
+        if ($this->getUserHistorySetting($uid) === false) {
+            $stmt = $this->db->prepare("INSERT INTO user_settings VALUES(:uid, 'save_history', :value)");
+        } else {
+            $stmt = $this->db->prepare("UPDATE user_settings SET value = :value WHERE setting='save_history' AND uid = :uid");
+        }
+
+        $stmt->bindValue(":value", $value);
+        $stmt->bindValue(":uid", $uid);
+
+        $stmt->execute();
+    }
+
+
+    /**
+     * Clear a users viewed history
+     *
+     * @param int $uid User ID
+     */
+    public function clearUserHistory($uid)
+    {
+        $stmt = $this->db->prepare("DELETE FROM history WHERE uid = :uid");
+        $stmt->bindValue(":uid", $uid);
+
+        $stmt->execute();
+    }
 }

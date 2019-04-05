@@ -228,7 +228,7 @@ class Pages extends Controller
             }
             return true;
         }
-        $forgotname = "forgot" . mt_rand(0, mt_getrandmax());
+        $forgotname = "forgot_" . mt_rand(0, mt_getrandmax());
         $forgottoken = $this->view->csrf_generate_token($forgotname);
 
         $this->view->render("forgotpassword", array("CSRFForgotName" => $forgotname,

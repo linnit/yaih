@@ -38,7 +38,7 @@ There are no images to see.
       <a href="/img/{{ image.url }}"><img src="{{ image.thumburl }}.jpg" class="card-img-top" alt="{{ image.title }}"></a>
       <div class="card-footer py-2">
         <div class="row justify-content-center">
-        <div class="col-md-auto px-1">
+        <div class="col-3 col-sm-3 col-md-auto px-1">
           <form method="post">
             <input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
             <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">
@@ -52,17 +52,17 @@ There are no images to see.
 {% endif %}
           </form>
       </div>
-      <div class="col-md-auto px-1">
+      <div class="col-3 col-sm-3 col-md-auto px-1">
           <button type="button" id="{{ image.id }}" class="btn btn-sm btn-info btn-report" data-toggle="modal" data-target="#reportModal" title="Report"><i class="fas fa-flag"></i></button>
       </div>
-      <div class="col-md-auto px-1">
+      <div class="col-3 col-sm-3 col-md-auto px-1">
           <a href="/user/{{ image.username }}" class="btn btn-sm btn-secondary a-btn" role="button" data-toggle="tooltip" data-placement="top" title="{{ image.username }}"><i class="fas fa-user"></i></a>
       </div>
-      <div class="col-md-auto px-1">
+      <div class="col-3 col-sm-3 col-md-auto px-1 d-none d-lg-inline">
         <span class="btn btn-sm btn-secondary a-btn font-weight-light">{{ image.created }}</span>
       </div>
 {% if (userlevel < 1) or (userlevel < 10 and username == image.username) %}
-      <div class="col-md-auto px-1">
+      <div class="col-3 col-sm-3 col-md-auto px-1">
         <form method="post">
           <input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
           <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">

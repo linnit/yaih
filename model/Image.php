@@ -445,9 +445,10 @@ class Image extends Model
      *
      * @param int $uid
      *
-     * @return int 
+     * @return int
      */
-    public function getHistoryPageCount($uid) {
+    public function getHistoryPageCount($uid)
+    {
         if (is_null($uid)) {
             if ($this->parent->user->userLoggedin) {
                 $uid = $this->parent->user->uid;

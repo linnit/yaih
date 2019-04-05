@@ -22,14 +22,12 @@ class Account extends Controller
         $this->parent = $parent;
     }
 
+
     /**
-     * Direct all POST requests to relevant function
+     * All POST requests on /account
      *
-     * @param  arr $vars Array of URL values
-     *
-     * @return bool Return false if hit the default case
      */
-    public function handlePostRequest($vars)
+    public function postManageAccount()
     {
         if (isset($_POST['image'])) {
             if (!$this->parent->image->hasImagePermission($_POST['image'])) {
@@ -56,6 +54,42 @@ class Account extends Controller
             return false;
         }
         return true;
+    }
+
+    /**
+     * All POST requests on /account/settings
+     *
+     */
+    public function postManageSettings()
+    {
+        if (isset($_POST["history"])) {
+            $this->model->user->setUserHistorySetting($this->model->user->uid, 1);
+        } else {
+            $this->model->user->setUserHistorySetting($this->model->user->uid, 0);
+            $this->model->user->clearUserHistory($this->model->user->uid);
+        }
+        header('Location: /account/settings');
+    }
+
+    /**
+     * Direct all POST requests to relevant function
+     *
+     * @param  arr $vars Array of URL values
+     *
+     * @return bool Return false if hit the default case
+     */
+    public function handlePostRequest($vars)
+    {
+        switch ($vars["action"]) {
+        case 'settings':
+            $this->postManageSettings();
+            break;
+        case null:
+            $this->postManageAccount();
+            break;
+        default:
+            break;
+        }
     }
 
     /**
@@ -109,7 +143,12 @@ class Account extends Controller
                 $this->view->render("account-submitted");
                 break;
             case 'settings':
-                $this->view->render("account-settings");
+                $csrfName = "account-settings_" . mt_rand(0, mt_getrandmax());
+                $csrfToken = $this->view->csrf_generate_token($csrfName);
+
+                $saveHistory = $this->model->user->getUserHistorySetting($this->model->user->uid);
+
+                $this->view->render("account-settings", array("CSRFName" => $csrfName, "CSRFToken" => $csrfToken, "history" => $saveHistory));
                 break;
             default:
                 $this->view->render("404");
@@ -166,11 +205,7 @@ class Account extends Controller
 
         $this->model->image->saveItem($id, $uid);
 
-        if (!isset($_SERVER['HTTP_REFERER'])) {
-            header('Location: /');
-        } else {
-            header('Location: ' . $_SERVER['HTTP_REFERER']);
-        }
+        $this->redirectBack();
 
         return true;
     }
@@ -191,11 +226,7 @@ class Account extends Controller
 
         $this->model->image->deleteSavedItem($id, $uid);
 
-        if (!isset($_SERVER['HTTP_REFERER'])) {
-            header('Location: /');
-        } else {
-            header('Location: ' . $_SERVER['HTTP_REFERER']);
-        }
+        $this->redirectBack();
 
         return true;
     }

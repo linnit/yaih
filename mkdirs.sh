@@ -1,6 +1,23 @@
 #!/bin/bash
 
-# todo make this better / more robust
+# todo - clean this up a bit?
+
+if [ ! -f ../.env ];
+    echo "../.env doesn't exit. Have you set up .env"
+    exit
+fi
+
+source ../.env
+
+if [ ! -d $IMAGEDIR ]; then
+    echo "$IMAGEDIR doesn't exist. Have you set up .env"
+    exit
+fi
+
+if [ ! -d $THUMBDIR ]; then
+    echo "$THUMBDIR doesn't exist. Have you set up .env"
+    exit
+fi
 
 DIRS=0
 
@@ -20,12 +37,11 @@ alphanum() {
 
 for x in $(alphanum); do
   DIRS=$((DIRS+1))
-  mkdir "$x"
-  printf "$x\n"
   for y in $(alphanum); do
     DIRS=$((DIRS+1))
-    mkdir "$x/$y"
+    mkdir -v -p "$IMAGEDIR/$x/$y"
+    mkdir -v -p "$THUMBDIR/$x/$y"
   done
 done
 
-echo "Dirs: $DIRS"
+echo "Created '$DIRS' directories"
