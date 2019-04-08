@@ -68,6 +68,13 @@ class Table extends Model
         `enabled` int(11) NOT NULL DEFAULT '1',
         PRIMARY KEY (`id`)
       )",
+      "forgot_tokens" => "CREATE TABLE `forgot_tokens` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `uid` int(11) NOT NULL,
+        `token` varchar(64) NOT NULL,
+        `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (`id`)
+      )",
       "user_settings" => "CREATE TABLE `user_settings` (
         `uid` int(11) NOT NULL,
         `setting` varchar(32) DEFAULT NULL,
@@ -114,6 +121,7 @@ class Table extends Model
       "user" => array("INSERT INTO user VALUES (0, 'anonymous', '', '', '', 10, 0);",
         "INSERT INTO user VALUES (NULL, 'admin', 'admin@example.com', '$2y$10\$dnE.zKJt9Wr1RkAm1/WPM.ZCTSDhEokM.6pSyyYw9NYenoCinxtKy', 'Default admin account', 0, 1);"
       ),
+      "forgot_tokens" => array(),
       "site_settings" => array("INSERT INTO site_settings VALUES('maintenance_mode', 0);"),
       "user_settings" => array(""),
     );
@@ -130,9 +138,10 @@ class Table extends Model
         //foreach($baseTables as $table) {
         foreach ($this->tables as $tableName => $tableSQL) {
             try {
+                // Can't bindParam a table name, so gotta do it this way
                 $stmt = $this->db->prepare("SELECT 1 FROM $tableName");
                 $stmt->execute();
-            } catch (PDOException $e) {
+            } catch (\PDOException $e) {
                 $this->createTable($tableName);
                 $this->insertDefaultRows($tableName);
             }

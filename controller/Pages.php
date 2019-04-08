@@ -101,11 +101,15 @@ class Pages extends Controller
             $this->view->render("404", $vars);
         } else {
 
-      // Add to history
-            if ($this->model->user->userLoggedin) {
-                $uid = $this->model->user->uid;
+        // Add to history
+        if ($this->model->user->userLoggedin) {
+            $uid = $this->model->user->uid;
+
+            // Only if they have the setting enabled
+            if ($this->model->user->getUserHistorySetting($uid)) {
                 $this->model->image->addToHistory($img["id"], $uid);
             }
+        }
 
             $this->view->render("image", array("image" => $img,
                 "siteurl" => $this->model->siteURL));
@@ -228,6 +232,23 @@ class Pages extends Controller
             }
             return true;
         }
+        if ($this->view->csrf_validate()) {
+            $user = $this->model->user->findUser($_POST["login"]);
+
+            // $_POST["login"] = "" will return users with no email, or 'anonymous' user
+            if (empty($user) || empty($_POST["login"])) {
+                $this->model->setAlert("warning", "No user found!");
+                header('Location: /forgotpassword');
+                exit;
+            }
+
+            // set forgot access code
+            // email user
+            // 
+            echo "Emailing - " . $user["email"];
+            exit;
+        }
+
         $forgotname = "forgot_" . mt_rand(0, mt_getrandmax());
         $forgottoken = $this->view->csrf_generate_token($forgotname);
 
