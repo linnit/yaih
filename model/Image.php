@@ -403,7 +403,11 @@ class Image extends Model
             $img->profileImage("icc", $profiles['icc']);
         }
 
-        return $img->writeImage($filename);
+        $status = $img->writeImage($filename);
+
+        $img->destroy();
+
+        return $status;
     }
 
 
