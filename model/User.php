@@ -23,6 +23,23 @@ class User extends Model
         }
     }
 
+    public function findUser($login) {
+        $stmt = $this->db->prepare("SELECT id, username, email FROM user WHERE email = :email OR username = :user");
+
+        $stmt->bindParam(":email", $login);
+        $stmt->bindParam(":user", $login);
+        $stmt->execute();
+
+        $user = $stmt->fetch();
+
+        return $user;
+        //if (!empty($user)) {
+        //    return $user;
+        //}
+        //return false;
+    }
+
+
     /**
      * Try log the user in with given email/password
      *
@@ -438,7 +455,7 @@ class User extends Model
 
         try {
             $stmt->execute();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->checkTablesExist();
             return $this->isLogged();
         }
@@ -483,16 +500,22 @@ class User extends Model
     /**
      * Get currently logged in user's email address
      *
-     * @return string/false email address of currently logged in user or false if not logged
+     * @param int $uid Optional user ID
+     *
+     * @return string/false email address of currently logged in user (or given user id) or false if not logged
      */
-    public function getUserEmail()
+    public function getUserEmail($uid = null)
     {
-        if (!$this->userLoggedin) {
+        if (!$this->userLoggedin && is_null($uid)) {
             return false;
         }
 
+        if (is_null($uid)) {
+            $uid = $this->uid;
+        }
+
         $stmt = $this->db->prepare("SELECT email FROM user WHERE id = :uid");
-        $stmt->bindParam(":uid", $this->uid);
+        $stmt->bindParam(":uid", $uid);
 
         $stmt->execute();
 
@@ -563,7 +586,7 @@ class User extends Model
 
             $stmt->bindParam(":page", $page);
             $stmt->execute();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->checkTablesExist();
             // Make sure we don't get stuck in a loop
             if ($level == 1) {
