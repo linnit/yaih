@@ -23,7 +23,15 @@ class User extends Model
         }
     }
 
-    public function findUser($login) {
+    /**
+     * Find given user using email/username
+     *
+     * @param str $login Username or email
+     *
+     * @return arr $user id, username, email of given user
+     */
+    public function findUser($login)
+    {
         $stmt = $this->db->prepare("SELECT id, username, email FROM user WHERE email = :email OR username = :user");
 
         $stmt->bindParam(":email", $login);
@@ -37,6 +45,25 @@ class User extends Model
         //    return $user;
         //}
         //return false;
+    }
+
+    /**
+     * Create a forgot password token and insert into database
+     *
+     * @param int id User ID
+     *
+     * @return str $token Forgot password token
+     */
+    public function createForgotToken($id)
+    {
+        $token = $this->random_str(16);
+        $stmt = $this->db->prepare("INSERT INTO forgot_tokens VALUES(NULL, :uid, :token, NULL);");
+
+        $stmt->bindParam(":uid", $id);
+        $stmt->bindParam(":token", $token);
+        $stmt->execute();
+
+        return $token;
     }
 
 
@@ -284,26 +311,24 @@ class User extends Model
     /**
      * Send an email
      *
-     * @todo Have a use for this function? Maybe for password resets
-     *
      * @param  str $email    [description]
      * @param  str $message [description]
      * @return [type]           [description]
      */
     public function emailUser($email, $message)
     {
-        $this->mail->setFrom("noreply{$this->model->siteDomain}", $this->model->siteName);
-        $this->mail->addAddress($email);
+        $this->parent->mail->setFrom("noreply{$this->parent->siteDomain}", $this->parent->siteName);
+        $this->parent->mail->addAddress($email);
 
-        $this->mail->isHTML(true);
+        $this->parent->mail->isHTML(true);
 
-        $this->mail->Subject = $this->model->siteName . ' Registration';
-        $this->mail->Body    = 'This is the HTML message body <b>in bold!</b><br>' . $message;
-        $this->mail->AltBody = 'This is the body in plain text for non-HTML mail clients\n:' .$message;
+        $this->parent->mail->Subject = $this->parent->siteName . ' Registration';
+        $this->parent->mail->Body    = 'This is the HTML message body <b>in bold!</b><br>' . $message;
+        $this->parent->mail->AltBody = 'This is the body in plain text for non-HTML mail clients\n:' .$message;
 
-        if (!$this->mail->send()) {
+        if (!$this->parent->mail->send()) {
             echo 'Message could not be sent.';
-            echo 'Mailer Error: ' . $this->mail->ErrorInfo;
+            echo 'Mailer Error: ' . $this->parent->mail->ErrorInfo;
         } else {
             echo 'Message has been sent';
         }

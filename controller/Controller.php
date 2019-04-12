@@ -57,7 +57,7 @@ class Controller
 
         // Login page
         $this->request("/login/?{redirect1}/?{redirect2}", "pages@login");
-        $this->request("/forgotpassword", "pages@forgotpassword");
+        $this->request("/forgotpassword/?{token}", "pages@forgotpassword");
         // Logout
         $this->request("/logout", "pages@logout");
 

@@ -29,7 +29,7 @@ class Upload extends Controller
      */
     public function handlePostRequest($vars)
     {
-        if (empty($_FILES['file'])) {
+        if (empty($_FILES['file']) || empty($_FILES['file']['tmp_name'])) {
             $this->model->setAlert("warning", "An image is required");
             header('Location: /');
             exit;

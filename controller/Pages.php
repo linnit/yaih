@@ -242,10 +242,11 @@ class Pages extends Controller
                 exit;
             }
 
-            // set forgot access code
-            // email user
-            // 
+            $token = $this->model->user->createForgotToken($user['id']);
+
             echo "Emailing - " . $user["email"];
+            $this->model->user->emailUser($user["email"], "You have forgot password, token here: $token");
+
             exit;
         }
 
