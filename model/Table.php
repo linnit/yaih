@@ -104,6 +104,7 @@ class Table extends Model
         "INSERT INTO pages VALUES(NULL, 'account-settings', 5);",
         "INSERT INTO pages VALUES(NULL, 'login', 10);",
         "INSERT INTO pages VALUES(NULL, 'forgotpassword', 10);",
+        "INSERT INTO pages VALUES(NULL, 'forgotpassword-reset', 10);",
         "INSERT INTO pages VALUES(NULL, 'resetpassword', 5);",
         "INSERT INTO pages VALUES(NULL, 'logout', 10);",
         "INSERT INTO pages VALUES(NULL, '404', 10);",

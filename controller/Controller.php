@@ -8,6 +8,7 @@ require 'controller/Admin.php';
 require 'controller/Account.php';
 require 'controller/Upload.php';
 require 'controller/Image.php';
+require 'controller/ForgotPassword.php';
 
 class Controller
 {
@@ -18,6 +19,7 @@ class Controller
         $this->account = new \YAIH\Controller\Account($this->model, $this->view, $this);
         $this->upload = new \YAIH\Controller\Upload($this->model, $this->view);
         $this->image = new \YAIH\Controller\Image($this->model, $this->view, $this->account);
+        $this->forgotpassword = new \YAIH\Controller\ForgotPassword($this->model, $this->view);
         $this->admin = new \YAIH\Controller\Admin(
             $this->model,
             $this->view,
@@ -30,7 +32,8 @@ class Controller
             $this->admin,
             $this->account,
             $this->upload,
-            $this->image
+            $this->image,
+            $this->forgotpassword
         );
     }
 

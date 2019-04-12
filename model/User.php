@@ -57,6 +57,12 @@ class User extends Model
     public function createForgotToken($id)
     {
         $token = $this->random_str(16);
+
+        // Check if the token is already in use
+        while ($this->checkForgotToken($token)) {
+          $token = $this->random_str(16);
+        }
+
         $stmt = $this->db->prepare("INSERT INTO forgot_tokens VALUES(NULL, :uid, :token, NULL);");
 
         $stmt->bindParam(":uid", $id);
@@ -66,6 +72,25 @@ class User extends Model
         return $token;
     }
 
+    /**
+     * Check a given token to see if it exists in the database
+     *
+     * @todo Tokens should only be valid for 2/3 days?
+     *
+     * @param str $token
+     *
+     * @return bool status of token's existense
+     */
+    public function checkForgotToken($token) {
+        $stmt = $this->db->prepare("SELECT uid, created FROM forgot_tokens WHERE token = :token;");
+
+        $stmt->bindParam(":token", $token);
+        $stmt->execute();
+
+        $token = $stmt->fetch();
+
+        return (!empty($token));
+    }
 
     /**
      * Try log the user in with given email/password

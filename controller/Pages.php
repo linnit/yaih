@@ -13,7 +13,7 @@ class Pages extends Controller
      * @param obj $model Main model object
      * @param obj $view  View controller
      */
-    public function __construct($model, $view, $admin, $account, $upload, $image)
+    public function __construct($model, $view, $admin, $account, $upload, $image, $forgotpassword)
     {
         $this->model = $model;
         $this->view = $view;
@@ -22,6 +22,7 @@ class Pages extends Controller
         $this->account = $account;
         $this->upload = $upload;
         $this->image = $image;
+        $this->forgotpassword = $forgotpassword;
     }
 
     /**
@@ -102,14 +103,14 @@ class Pages extends Controller
         } else {
 
         // Add to history
-        if ($this->model->user->userLoggedin) {
-            $uid = $this->model->user->uid;
+            if ($this->model->user->userLoggedin) {
+                $uid = $this->model->user->uid;
 
-            // Only if they have the setting enabled
-            if ($this->model->user->getUserHistorySetting($uid)) {
-                $this->model->image->addToHistory($img["id"], $uid);
+                // Only if they have the setting enabled
+                if ($this->model->user->getUserHistorySetting($uid)) {
+                    $this->model->image->addToHistory($img["id"], $uid);
+                }
             }
-        }
 
             $this->view->render("image", array("image" => $img,
                 "siteurl" => $this->model->siteURL));
@@ -219,42 +220,9 @@ class Pages extends Controller
      *
      * @return bool
      */
-    public function forgotpassword()
+    public function forgotpassword($vars)
     {
-        if ($this->model->user->userLoggedin) {
-            // If the user is already logged in, they don't need to see the login page ever
-            if ($this->model->user->getUserLevel() != 0) {
-                // If their user level isn't on an admin level, send them to /customer
-                header('Location: /account');
-            } else {
-                // If they're an admin, send them to /admin
-                header('Location: /admin');
-            }
-            return true;
-        }
-        if ($this->view->csrf_validate()) {
-            $user = $this->model->user->findUser($_POST["login"]);
-
-            // $_POST["login"] = "" will return users with no email, or 'anonymous' user
-            if (empty($user) || empty($_POST["login"])) {
-                $this->model->setAlert("warning", "No user found!");
-                header('Location: /forgotpassword');
-                exit;
-            }
-
-            $token = $this->model->user->createForgotToken($user['id']);
-
-            echo "Emailing - " . $user["email"];
-            $this->model->user->emailUser($user["email"], "You have forgot password, token here: $token");
-
-            exit;
-        }
-
-        $forgotname = "forgot_" . mt_rand(0, mt_getrandmax());
-        $forgottoken = $this->view->csrf_generate_token($forgotname);
-
-        $this->view->render("forgotpassword", array("CSRFForgotName" => $forgotname,
-      "CSRFForgotToken" => $forgottoken));
+        $this->forgotpassword->entry($vars);
     }
 
     /**
