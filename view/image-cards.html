@@ -32,8 +32,9 @@
 {% if stuff.images|length < 1 %}
 There are no images to see.
 {% else %}
-  <div class="card-group">
-{% for image in stuff.images %}
+{% for row in stuff.images|batch(3) %}
+  <div class="card-group mt-2">
+{% for image in row %}
     <div class="card">
       <a href="/img/{{ image.url }}"><img src="{{ image.thumburl }}.jpg" class="card-img-top" alt="{{ image.title }}"></a>
       <div class="card-footer py-2">
@@ -74,11 +75,10 @@ There are no images to see.
 {% endif %}
       </div>
       </div>
-      <!--<div class="card-footer">
-      </div>-->
     </div>
 {% endfor %}
   </div>
+{% endfor %}
 {% endif %}
 {{ include('pagination.html') }}
 <script>

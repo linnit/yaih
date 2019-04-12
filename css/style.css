@@ -99,25 +99,8 @@ a, .nav-pink {
   margin-bottom: 1em;
   /*outline-offset: 30px;*/
 }
-#upload_button {
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 300;
-  width: 256px;
-  background: transparent;
-  color: #FE5F75;
-  border: solid 1px #FE5F75;
-  border-radius: 3px;
-  font-size: 18px;
-  margin-bottom: 20px;
-  outline: none !important;
-  padding: 10px 20px;
-}
-#upload_button:hover {
-  color: #FC9842;
-  border: solid 1px #FC9842;
-}
 #mapped_image {
-  width: 50%;
+  /*width: 50%;*/
   max-width: 350px;
 }
 

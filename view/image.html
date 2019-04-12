@@ -1,13 +1,13 @@
 {{ include('header.html') }}
-<div class="card border-none mb-12">
-  <div class="row no-gutters">
-    <div class="col-md-9 bg-secondary">
+<div class="card border-none mb-12 h-100">
+  <div class="row no-gutters h-100">
+    <div class="col-md-9 bg-secondary d-flex">
 {% if stuff.image.mimetype == 'video/mp4' %}
-      <video controls width="100%">
+      <video controls width="100%" d-flex>
           <source src="{{stuff.image.full_url}}" type="{{ stuff.image.mimetype}}">
       </video>
 {% else %}
-      <img src="{{stuff.image.full_url}}" class="img-fluid mx-auto d-block" alt="alt text">
+      <img src="{{stuff.image.full_url}}" class="img-fluid justify-content-center align-self-center m-auto" alt="alt text">
 {% endif %}
     </div>
     <div class="col-md-3">

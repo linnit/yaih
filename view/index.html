@@ -1,5 +1,5 @@
 {{ include('header.html') }}
-  <div id="main" class="upload-form col-md-6 m-auto">
+  <div id="main" class="upload-form col-md-4 m-auto">
     <form enctype="multipart/form-data" class="example" method="post">
       <p class="grey">Click below or drag your image</p>
       <div class="wrapper">
@@ -8,8 +8,7 @@
           <label class="button" for="file"><img id="mapped_image" alt="Upload Icon" src="/img/image_icon.png"></label>
         </div>
         <p>
-        <!--<input id="upload_button" type="submit" value="upload image">-->
-        <button type="submit" class="btn btn-outline-pink font-weight-light">upload image</button>
+        <button type="submit" class="btn btn-lg btn-outline-pink font-weight-light">upload image</button>
         </p>
       </div>
       <input type="hidden" name="CSRFName" value="{{ stuff.CSRFUploadName }}">

@@ -22,7 +22,7 @@ class Image extends Model
         $this->parent	= $parent;
         $this->db	= $this->parent->db;
 
-        $this->itemPerPage = 3;
+        $this->itemPerPage = 6;
     }
 
     /**

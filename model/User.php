@@ -267,7 +267,10 @@ class User extends Model
             $email = null;
         }
 
-        if (empty($password)) {
+        if (empty($username)) {
+            $this->setAlert('danger', "Username field empty");
+            return false;
+        } elseif (empty($password)) {
             $this->setAlert('danger', "Password field empty");
             return false;
         } elseif ($password !== $repeatpassword) {
