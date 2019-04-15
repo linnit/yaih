@@ -60,7 +60,7 @@ class User extends Model
 
         // Check if the token is already in use
         while ($this->checkForgotToken($token)) {
-          $token = $this->random_str(16);
+            $token = $this->random_str(16);
         }
 
         $stmt = $this->db->prepare("INSERT INTO forgot_tokens VALUES(NULL, :uid, :token, NULL);");
@@ -81,7 +81,8 @@ class User extends Model
      *
      * @return bool status of token's existense
      */
-    public function checkForgotToken($token) {
+    public function checkForgotToken($token)
+    {
         $stmt = $this->db->prepare("SELECT uid, created FROM forgot_tokens WHERE token = :token;");
 
         $stmt->bindParam(":token", $token);
@@ -345,7 +346,7 @@ class User extends Model
      */
     public function emailUser($email, $message)
     {
-        $this->parent->mail->setFrom("noreply{$this->parent->siteDomain}", $this->parent->siteName);
+        $this->parent->mail->setFrom("noreply@{$this->parent->siteDomain}", $this->parent->siteName);
         $this->parent->mail->addAddress($email);
 
         $this->parent->mail->isHTML(true);

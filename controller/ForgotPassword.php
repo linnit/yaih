@@ -38,13 +38,13 @@ class ForgotPassword extends Controller
             return true;
         }
 
-        if (!empty($vars["token"])) {
-            $this->handleResetPage($vars);
+        if ($this->view->csrf_validate()) {
+            $this->handlePostRequest();
             exit;
         }
 
-        if ($this->view->csrf_validate()) {
-            $this->handlePostRequest();
+        if (!empty($vars["token"])) {
+            $this->handleResetPage($vars);
             exit;
         }
 
@@ -59,7 +59,7 @@ class ForgotPassword extends Controller
      * handleResetPage
      *
      */
-    public function handleResetPage($vars) 
+    public function handleResetPage($vars)
     {
         $tokenStatus = $this->model->user->checkForgotToken($vars["token"]);
         if ($tokenStatus) {
@@ -80,6 +80,8 @@ class ForgotPassword extends Controller
     {
         switch ($_POST['action']) {
             case 'reset':
+                var_dump($_POST);
+                exit;
                 break;
             case 'email':
                 $user = $this->model->user->findUser($_POST["login"]);

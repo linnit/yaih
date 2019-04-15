@@ -35,13 +35,18 @@ class Model
         $dbuser = getenv('DB_USER');
         $dbpass = getenv('DB_PASS');
 
+
         $this->mail = new \PHPMailer;
         if (filter_var(getenv('SMTPDEBUG'), FILTER_VALIDATE_BOOLEAN)) {
             $this->mail->SMTPDebug = 3;
         }
         $this->mail->isSMTP();
         $this->mail->Host =		getenv('SMTPHOST');
-        $this->mail->SMTPAuth =		getenv('SMTPAUTH');
+        if (getenv('SMTPAUTH') == "false") {
+            $this->mail->SMTPAuth = false;
+        } elseif (getenv('SMTPAUTH') == "true") {
+            $this->mail->SMTPAuth = true;
+        }
         $this->mail->Username =		getenv('SMTPUSER');
         $this->mail->Password =		getenv('SMTPPASS');
         $this->mail->SMTPSecure =	filter_var(getenv('SMTPSECURE'), FILTER_VALIDATE_BOOLEAN);
