@@ -195,10 +195,18 @@ class Admin extends Controller
             $name = "admin-users_" . mt_rand(0, mt_getrandmax());
             $token = $this->view->csrf_generate_token($name);
 
-            $users = $this->model->user->getAllUsers();
+            $page = $this->getPageNumber($vars);
+            $pageCount = $this->model->user->getAllUsersPageCount();
+
+            $users = $this->model->user->getAllUsers($page);
 
             $this->view->render("admin-users", array("CSRFName" => $name,
-                "CSRFToken" => $token, "users" => $users));
+                "CSRFToken" => $token,
+                "users" => $users,
+                "pageCount" => $pageCount,
+                "currentPageNo" => $page,
+                "currentPage" => "/admin/users"
+            ));
             break;
         case 'settings':
             $name = "form_" . mt_rand(0, mt_getrandmax());

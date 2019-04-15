@@ -542,13 +542,37 @@ class User extends Model
      *
      * @return array All user results
      */
-    public function getAllUsers()
+    public function getAllUsers($page)
     {
-        $stmt = $this->db->prepare("SELECT * FROM user ORDER BY id ASC");// LIMIT 0,20"); [TODO] Some kind of pagination?
+        if (empty($page)) {
+            $page = 0;
+        } else {
+            $page = ($page-1) * 20;
+        }
+ 
+        $stmt = $this->db->prepare("SELECT * FROM user ORDER BY id ASC LIMIT :page,:ipp");
+
+        $stmt->bindValue(":page", $page, \PDO::PARAM_INT);
+        $stmt->bindValue(":ipp", 20, \PDO::PARAM_INT);
 
         $stmt->execute();
 
         return $stmt->fetchAll();
+    }
+
+    /**
+     * getAllUsersPageCount
+     *
+     */
+    public function getAllUsersPageCount() {
+        $stmt = $this->db->prepare("SELECT count(id) FROM user");
+        $stmt->execute();
+
+        $count = $stmt->fetch();
+
+        $totalPages = ceil($count[0] / 20);
+
+        return $totalPages;
     }
 
     /**
