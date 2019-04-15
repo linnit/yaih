@@ -31,7 +31,7 @@ class Admin extends Controller
         } else {
             $this->model->site->updateMaintenanceMode(0);
         }
-        header('Location: /admin/settings');
+        $this->redirectBack();
     }
 
     /**
@@ -45,43 +45,43 @@ class Admin extends Controller
             case 'lockuser':
                 if ($this->model->user->lockUser($_POST["user"])) {
                     $this->model->setAlert("success", "Locked User");
-                    header('Location: /admin/users');
+                    $this->redirectBack();
                     return true;
                 } else {
                     $this->model->setAlert("warning", "Problem locking user");
-                    header('Location: /admin/users');
+                    $this->redirectBack();
                     return false;
                 }
             break;
             case 'unlockuser':
                 if ($this->model->user->unlockUser($_POST["user"])) {
                     $this->model->setAlert("success", "Unlocked User");
-                    header('Location: /admin/users');
+                    $this->redirectBack();
                     return true;
                 } else {
                     $this->model->setAlert("warning", "Problem unlocking user");
-                    header('Location: /admin/users');
+                    $this->redirectBack();
                     return false;
                 }
             break;
             case 'edituser':
                 if ($this->model->user->userIdExists($_POST["user"])) {
-                    header("Location: /admin/edituser/".$_POST["user"]);
+                    $this->redirectBack();
                     return true;
                 } else {
                     $this->model->setAlert("warning", "User does not exist");
-                    header("Location: /admin/users");
+                    $this->redirectBack();
                     return false;
                 }
               break;
             case 'deleteuser':
                 if ($this->model->user->deleteUser($_POST["user"])) {
                     $this->model->setAlert("success", "Deleted User");
-                    header('Location: /admin/users');
+                    $this->redirectBack();
                     return true;
                 } else {
                     $this->model->setAlert("warning", "Problem deleting user");
-                    header('Location: /admin/users');
+                    $this->redirectBack();
                     return false;
                 }
                 break;
@@ -173,13 +173,13 @@ class Admin extends Controller
         case 'edituser':
             if (!isset($vars["variable"])) {
                 $this->model->setAlert("warning", "No user ID!");
-                header("Location: /admin/users");
+                $this->redirectBack();
                 return false;
             }
 
             if (!$this->model->user->userIdExists($vars["variable"])) {
                 $this->model->setAlert("warning", "User does not exist");
-                header("Location: /admin/users");
+                $this->redirectBack();
                 return false;
             }
 
