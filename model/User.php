@@ -252,20 +252,30 @@ class User extends Model
     }
 
     /**
-     * [register description]
+     * Usernames should only contain alphanumerical and _,-,. 
      *
-     * @return boolean                 [description]
+     * @param str $username Given username to check
+     *
+     * @return bool true if username confirms to rules
      */
-    public function register()
-    {
-        $username = $_POST["username"];
-        $password = $_POST["password"];
-        $repeatpassword = $_POST["password2"];
+    function acceptable_username($username) {
+        return preg_match("/^[a-zA-Z0-9_\-\.]+$/", $username);
+    }
 
-        if (isset($_POST["email"])) {
-            $email = $_POST["email"];
-        } else {
-            $email = null;
+    /**
+     * Check values given from register form
+     *
+     * @param str $username
+     * @param str $email
+     * @param str $password
+     * @param str $repeatpassword
+     *
+     * @return bool true if all values acceptable
+     */
+    function check_register_inputs($username, $email, $password, $repeatpassword) {
+        if (!$this->acceptable_username($username)) {
+            $this->setAlert('danger', "Username contains illegal characters");
+            return false;
         }
 
         if (empty($username)) {
@@ -282,6 +292,30 @@ class User extends Model
         // Check if the username, or email is already in use
         if ($this->userEmailExists($username, $email)) {
             $this->setAlert('danger', "Username or email address already has an account");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * [register description]
+     *
+     * @return boolean                 [description]
+     */
+    public function register()
+    {
+        $username = $_POST["username"];
+        $password = $_POST["password"];
+        $repeatpassword = $_POST["password2"];
+
+        if (isset($_POST["email"])) {
+            $email = $_POST["email"];
+        } else {
+            $email = null;
+        }
+
+        if (!$this->check_register_inputs($username, $email, $password, $repeatpassword)) {
             return false;
         }
 
