@@ -4,6 +4,7 @@ namespace YAIH\Model;
 require 'model/User.php';
 require 'model/Table.php';
 require 'model/Image.php';
+require 'model/Video.php';
 require 'model/Site.php';
 
 /**

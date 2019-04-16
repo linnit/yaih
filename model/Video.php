@@ -8,17 +8,17 @@ $time = get_timestamp($sanitised_filename);
 make_thumbnail($sanitised_filename, $time, $thumbnail);
 */
 
-class VideoThumbnail extends Model {
+class Video extends Model {
 
-    $this->filename = "./big_buck_bunny_240p_30mb.mp4";
-    $this->thumbnail = "./test";
-
-    $this->ffprobe_bin = "/bin/ffprobe";
-    $this->ffmpeg_bin = "/bin/ffmpeg";
+    //$this->filename = "./big_buck_bunny_240p_30mb.mp4";
+    //$this->thumbnail = "./test";
 
     function __construct() {
+        $this->ffprobe_bin = "/bin/ffprobe";
+        $this->ffmpeg_bin = "/bin/ffmpeg";
+
         if (!$this->ffmpeg_exists()) {
-            throw new Exception("Problem with ffmpeg package");
+            throw new \Exception("Problem with ffmpeg package");
             return false;
         }
     }
@@ -30,15 +30,13 @@ class VideoThumbnail extends Model {
      */
     function ffmpeg_exists()
     {
-        global $ffprobe_bin, $ffmpeg_bin;
-
-        if (!file_exists($ffprobe_bin)) {
-            throw new Exception("$ffprobe_bin not found");
+        if (!file_exists($this->ffprobe_bin)) {
+            throw new \Exception("$ffprobe_bin not found");
             return false;
         }
 
-        if (!file_exists($ffmpeg_bin)) {
-            throw new Exception("$ffmpeg_bin not found");
+        if (!file_exists($this->ffmpeg_bin)) {
+            throw new \Exception("$ffmpeg_bin not found");
             return false;
         }
 
@@ -59,7 +57,7 @@ class VideoThumbnail extends Model {
         $sanitised_filename = preg_replace("/[^a-zA-Z0-9_\-\.\/]/", "", $filename);
 
         if (!file_exists($sanitised_filename)) {
-            throw new Exception("$sanitised_filename not found");
+            throw new \Exception("$sanitised_filename not found");
             return false;
         }
 
@@ -76,12 +74,10 @@ class VideoThumbnail extends Model {
      */
     function get_timestamp($filename)
     {
-        global $ffprobe_bin, $ffmpeg_bin;
-
-        exec("$ffprobe_bin -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 $filename | awk '{print ($1)/2}'", $time, $return_val);
+        exec("{$this->ffprobe_bin} -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 $filename | awk '{print ($1)/2}'", $time, $return_val);
 
         if ($return_val != 0) {
-            throw new Exception("Error running ffprobe: $time");
+            throw new \Exception("Error running ffprobe: $time");
             return false;
         }
 
@@ -101,16 +97,14 @@ class VideoThumbnail extends Model {
      */
     function make_thumbnail($filename, $time, $thumbnail)
     {
-        global $ffprobe_bin, $ffmpeg_bin;
-
         exec(
-            "ffmpeg -ss $time -i $filename -vframes 1 -q:v 2 -f image2 $thumbnail",
+            "{$this->ffmpeg_bin} -ss $time -i $filename -vframes 1 -q:v 2 -f image2 $thumbnail",
             $ffmpeg_output,
             $return_val
         );
 
         if ($return_val != 0) {
-            throw new Exception("Error running ffmpeg: $ffmpeg_output");
+            throw new \Exception("Error running ffmpeg: $ffmpeg_output");
             return false;
         }
 

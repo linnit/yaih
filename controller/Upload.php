@@ -65,8 +65,23 @@ class Upload extends Controller
             die("Error uploading file.");
         }
 
-        // todo - thumbnail for mp4s?.
-        if ($mimeType != 'video/mp4') {
+        if ($mimeType == 'video/mp4') {
+            $video = new \YAIH\Model\Video();
+
+            $splitted = str_split($filename);                                            
+            $thumbnail_path = "{$this->model->thumbDir}/{$splitted[0]}/{$splitted[1]}/$filename";
+
+            //$sanitised_filename = $video->sanitise_filename($filename);
+
+            //if (!$sanitised_filename) {
+            //    $this->model->setAlert("danger", "An error occurred");
+            //    return false;
+            //}
+            
+            $time = $video->get_timestamp($filepath);
+
+            $video->make_thumbnail($filepath, $time, $thumbnail_path);
+        } else {
             // Make thumbnail
             $this->model->image->makeThumbnail($fileContents, $filename);
         }
