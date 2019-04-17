@@ -79,7 +79,7 @@ class User extends Model
      *
      * @param str $token
      *
-     * @return bool status of token's existense
+     * @return int User ID
      */
     public function checkForgotToken($token)
     {
@@ -90,7 +90,25 @@ class User extends Model
 
         $token = $stmt->fetch();
 
-        return (!empty($token));
+        return $token["uid"];
+        //return (!empty($token));
+    }
+
+    /**
+     * Delete forgotpassword token
+     *
+     * @param str $token
+     *
+     * @return int successful or not
+     */
+    public function deleteForgotToken($token)
+    {
+        $stmt = $this->db->prepare("DELETE FROM forgot_tokens WHERE token = :token;");
+
+        $stmt->bindParam(":token", $token);
+        $stmt->execute();
+
+        return $db->las;
     }
 
     /**
@@ -252,13 +270,14 @@ class User extends Model
     }
 
     /**
-     * Usernames should only contain alphanumerical and _,-,. 
+     * Usernames should only contain alphanumerical and _,-,.
      *
      * @param str $username Given username to check
      *
      * @return bool true if username confirms to rules
      */
-    function acceptable_username($username) {
+    public function acceptable_username($username)
+    {
         return preg_match("/^[a-zA-Z0-9_\-\.]+$/", $username);
     }
 
@@ -272,7 +291,8 @@ class User extends Model
      *
      * @return bool true if all values acceptable
      */
-    function check_register_inputs($username, $email, $password, $repeatpassword) {
+    public function check_register_inputs($username, $email, $password, $repeatpassword)
+    {
         if (!$this->acceptable_username($username)) {
             $this->setAlert('danger', "Username contains illegal characters");
             return false;
@@ -362,9 +382,10 @@ class User extends Model
         if (is_null($password)) {
             $password = $this->random_str(16);
         }
-        $stmt = $this->db->prepare("UPDATE user SET password = :hash");
+        $stmt = $this->db->prepare("UPDATE user SET password = :hash WHERE id = :uid");
         $hash = password_hash($password, PASSWORD_BCRYPT);
         $stmt->bindValue(":hash", $hash);
+        $stmt->bindValue(":uid", $uid);
 
         $stmt->execute();
 
@@ -386,8 +407,8 @@ class User extends Model
         $this->parent->mail->isHTML(true);
 
         $this->parent->mail->Subject = $this->parent->siteName . ' Registration';
-        $this->parent->mail->Body    = 'This is the HTML message body <b>in bold!</b><br>' . $message;
-        $this->parent->mail->AltBody = 'This is the body in plain text for non-HTML mail clients\n:' .$message;
+        $this->parent->mail->Body    = $message;
+        $this->parent->mail->AltBody = $message;
 
         if (!$this->parent->mail->send()) {
             echo 'Message could not be sent.';
@@ -598,7 +619,8 @@ class User extends Model
      * getAllUsersPageCount
      *
      */
-    public function getAllUsersPageCount() {
+    public function getAllUsersPageCount()
+    {
         $stmt = $this->db->prepare("SELECT count(id) FROM user");
         $stmt->execute();
 

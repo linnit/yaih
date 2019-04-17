@@ -39,7 +39,7 @@ class ForgotPassword extends Controller
         }
 
         if ($this->view->csrf_validate()) {
-            $this->handlePostRequest();
+            $this->handlePostRequest($vars);
             exit;
         }
 
@@ -71,17 +71,38 @@ class ForgotPassword extends Controller
             exit;
         } else {
             $this->model->setAlert("warning", "Token does not exist or expired");
-            header('Location: /forgotpassword');
+            $this->redirectBack();
             exit;
         }
     }
 
-    public function handlePostRequest()
+    public function handlePostRequest($vars)
     {
         switch ($_POST['action']) {
             case 'reset':
-                var_dump($_POST);
-                exit;
+                // Check token
+                $uid = $this->model->user->checkForgotToken($vars["token"]);
+                if (!$uid) {
+                    $this->model->setAlert("warning", "Token does not exist or expired");
+                    $this->redirectBack();
+                    exit;
+                }
+                // Check passwords match
+                if ($_POST["password1"] == $_POST["password2"] && !empty($_POST["password1"])) {
+                    // Reset password
+                    $this->model->user->resetPassword($uid, $_POST["password1"]);
+
+                    // Delete token
+                    $this->model->user->deleteForgotToken($vars["token"]);
+
+                    $_POST["username"] = $this->model->user->getUsername($uid);
+                    $_POST["password"] = $_POST["password1"];
+                    $this->model->user->login();
+                    $this->redirectBack();
+                    exit;
+                }
+                //var_dump($_POST);
+                //exit;
                 break;
             case 'email':
                 $user = $this->model->user->findUser($_POST["login"]);
@@ -95,8 +116,15 @@ class ForgotPassword extends Controller
 
                 $token = $this->model->user->createForgotToken($user['id']);
 
-                echo "Emailing - " . $user["email"];
-                $this->model->user->emailUser($user["email"], "You have forgot password, token here: $token");
+                //echo "Emailing - " . $user["email"];
+
+                $url = $this->model->siteURL . "/forgotpassword/$token";
+                $this->model->user->emailUser($user["email"],
+                    "<p>You have requested to reset your password.</p><p>Use the following link to reset. <a href='$url'>Reset Password</a></p><p>$url</p>");
+
+                $this->model->setAlert("success", "Email sent");
+                $this->redirectBack();
+                
                 break;
             default:
                 break;

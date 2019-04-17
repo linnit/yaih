@@ -8,12 +8,14 @@ $time = get_timestamp($sanitised_filename);
 make_thumbnail($sanitised_filename, $time, $thumbnail);
 */
 
-class Video extends Model {
+class Video extends Model
+{
 
     //$this->filename = "./big_buck_bunny_240p_30mb.mp4";
     //$this->thumbnail = "./test";
 
-    function __construct() {
+    public function __construct()
+    {
         $this->ffprobe_bin = "/bin/ffprobe";
         $this->ffmpeg_bin = "/bin/ffmpeg";
 
@@ -28,7 +30,7 @@ class Video extends Model {
      *
      * @return int status
      */
-    function ffmpeg_exists()
+    public function ffmpeg_exists()
     {
         if (!file_exists($this->ffprobe_bin)) {
             throw new \Exception("$ffprobe_bin not found");
@@ -51,7 +53,7 @@ class Video extends Model {
      *
      * @return str $sanitised_filename Cleaned filename
      */
-    function sanitise_filename($filename)
+    public function sanitise_filename($filename)
     {
         // We've generated the filename, but just to be sure
         $sanitised_filename = preg_replace("/[^a-zA-Z0-9_\-\.\/]/", "", $filename);
@@ -72,7 +74,7 @@ class Video extends Model {
      *
      * @return int $time Timestamp of the center of given video
      */
-    function get_timestamp($filename)
+    public function get_timestamp($filename)
     {
         exec("{$this->ffprobe_bin} -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 $filename | awk '{print ($1)/2}'", $time, $return_val);
 
@@ -95,7 +97,7 @@ class Video extends Model {
      * @param int $time Time of the middle of the video
      * @param str $thumbnail Thumbnail filename
      */
-    function make_thumbnail($filename, $time, $thumbnail)
+    public function make_thumbnail($filename, $time, $thumbnail)
     {
         exec(
             "{$this->ffmpeg_bin} -ss $time -i $filename -vframes 1 -q:v 2 -f image2 $thumbnail",
@@ -107,7 +109,5 @@ class Video extends Model {
             throw new \Exception("Error running ffmpeg: $ffmpeg_output");
             return false;
         }
-
     }
-
 }
