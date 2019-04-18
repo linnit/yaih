@@ -6,15 +6,15 @@
 
               <div class="mt-5 d-sm-block d-md-none"></div>
     <h1 class="title">Login</h1>
-<form class="form form-login" method="post">
+<form class="form form-login needs-validation" method="post" novalidate>
 <input type="hidden" name="CSRFName" value="{{ stuff.CSRFLoginName }}">
 <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFLoginToken }}">
 
   <div class="form-group">
-    <input class="form-control" type="text" placeholder="Username or Email" name="login">
+    <input class="form-control" type="text" placeholder="Username or Email" name="login" required>
 </div>
   <div class="form-group">
-    <input class="form-control" type="password" placeholder="Password" name="password">
+    <input class="form-control" type="password" placeholder="Password" name="password" required>
 </div>
 <div class="field is-grouped">
     <button type="submit" class="btn btn-outline-pink font-weight-light">Login</button>
@@ -25,21 +25,21 @@
 <div class="col-sm">
               <div class="mt-5 d-sm-block d-md-none"></div>
   <h1 class="title">Register</h1>
-<form class="form form-register" method="post" action="/register">
+<form class="form form-register needs-validation" method="post" action="/register" novalidate>
 <input type="hidden" name="CSRFName" value="{{ stuff.CSRFRegisterName }}">
 <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFRegisterToken }}">
 
   <div class="form-group">
-    <input class="form-control" type="text" placeholder="Username" name="username">
+    <input class="form-control" type="text" placeholder="Username" name="username" required>
 </div>
   <div class="form-group">
     <input class="form-control" type="email" placeholder="Email (Optional)" name="email">
 </div>
   <div class="form-group">
-    <input class="form-control" type="password" placeholder="Password" name="password">
+    <input class="form-control" type="password" placeholder="Password" name="password" required>
 </div>
   <div class="form-group">
-    <input class="form-control" type="password" placeholder="Confirm Password" name="password2">
+    <input class="form-control" type="password" placeholder="Confirm Password" name="password2" required>
 </div>
     <button type="submit" class="btn btn-outline-pink font-weight-light">Register</button>
 </form>
