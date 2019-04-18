@@ -66,7 +66,8 @@ class Admin extends Controller
             break;
             case 'edituser':
                 if ($this->model->user->userIdExists($_POST["user"])) {
-                    $this->redirectBack();
+                    header("Location: /admin/edituser/".$_POST["user"]);
+                    //$this->redirectBack();
                     return true;
                 } else {
                     $this->model->setAlert("warning", "User does not exist");

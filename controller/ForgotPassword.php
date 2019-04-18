@@ -119,7 +119,7 @@ class ForgotPassword extends Controller
                 //echo "Emailing - " . $user["email"];
 
                 $url = $this->model->siteURL . "/forgotpassword/$token";
-                $this->model->user->emailUser($user["email"],
+                $this->model->user->emailUser($user["email"], "Forgot Password",
                     "<p>You have requested to reset your password.</p><p>Use the following link to reset. <a href='$url'>Reset Password</a></p><p>$url</p>");
 
                 $this->model->setAlert("success", "Email sent");

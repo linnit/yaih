@@ -6,16 +6,47 @@
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           <h1 class="h2">Edit User</h1>
         </div>
-        <form class="form-horizontal" method="post" action="">
-          <input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
-          <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">
-        Edit user page!
-          <div class="form-group row justify-content-lg-center">
-            <div class="col col-lg-6">
-              <button type="submit" class="btn btn-secondary btn-block">Update User</button>
-            </div>
-          </div>
-        </form>
+
+<form class="form form-register needs-validation" method="post" novalidate>
+<input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
+<input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">
+
+  <div class="form-group">
+      <input class="form-control" type="text" placeholder="Username" value="{{stuff.user.username}}" name="username" required>
+</div>
+  <div class="form-group">
+      <input class="form-control" type="email" placeholder="Email (Optional)" value="{{stuff.user.email}}" name="email">
+</div>
+  <div class="form-group">
+    <input class="form-control" type="password" placeholder="Password" name="password">
+</div>
+  <div class="form-group">
+    <input class="form-control" type="password" placeholder="Confirm Password" name="password2">
+    <small id="passwordHelpBlock" class="form-text text-muted">
+        Leave password fields blank to keep password the same
+      </small>
+</div>
+    <button type="submit" class="btn btn-outline-pink font-weight-light">Update</button>
+</form>
+
+<!--
+<div class="container mt-2">
+  <div class="col-1">
+  <form class="form" method="post">
+    <input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
+    <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">
+    <button type="submit" class="btn btn-secondary font-weight-light">Lock</button>
+  </form>
+  </div>
+    <div class="col-1">
+  <form class="form" method="post">
+    <input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
+    <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">
+    <button type="submit" class="btn btn-secondary font-weight-light">Delete</button>
+  </form>
+  </div>
+</div>
+-->
       </main>
     </div>
   </div>

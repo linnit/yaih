@@ -274,11 +274,12 @@ class User extends Model
      *
      * @param str $username Given username to check
      *
-     * @return bool true if username confirms to rules
+     * @return bool true if username conforms to rules
      */
     public function acceptable_username($username)
     {
-        return preg_match("/^[a-zA-Z0-9_\-\.]+$/", $username);
+        return preg_match("/^[a-zA-Z0-9_\-\.]+$/", $username) &&
+            strlen($username) <= 24;
     }
 
     /**
@@ -399,14 +400,14 @@ class User extends Model
      * @param  str $message [description]
      * @return [type]           [description]
      */
-    public function emailUser($email, $message)
+    public function emailUser($email, $subject, $message)
     {
         $this->parent->mail->setFrom("noreply@{$this->parent->siteDomain}", $this->parent->siteName);
         $this->parent->mail->addAddress($email);
 
         $this->parent->mail->isHTML(true);
 
-        $this->parent->mail->Subject = $this->parent->siteName . ' Registration';
+        $this->parent->mail->Subject = "{$this->parent->siteName} - $subject";
         $this->parent->mail->Body    = $message;
         $this->parent->mail->AltBody = $message;
 
