@@ -10,7 +10,7 @@
 <form class="form form-register needs-validation" method="post" novalidate>
 <input type="hidden" name="CSRFName" value="{{ stuff.CSRFName }}">
 <input type="hidden" name="CSRFToken" value="{{ stuff.CSRFToken }}">
-
+<input type="hidden" name="uid" value="{{ stuff.user.id }}">
   <div class="form-group">
       <input class="form-control" type="text" placeholder="Username" value="{{stuff.user.username}}" name="username" required>
 </div>

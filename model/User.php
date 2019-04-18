@@ -841,4 +841,79 @@ class User extends Model
 
         $stmt->execute();
     }
+
+    /**
+     * 
+     * Update user values for given uid
+     *
+     * @param int $uid
+     * @param str $username
+     * @param str $email
+     * @param str $password
+     * @param str $password2
+     *
+     * @return bool success
+     */
+    function updateUser($uid, $username, $email, $password, $password2) {
+        $user = $this->getUser($uid);
+        if (!$user) {
+            $this->setAlert("danger", "User doesn't exist");
+            return false;
+        }
+
+        if ($user["username"] != $username) {
+            $this->updateUsername($uid, $username);
+        }
+
+        if ($user["email"] != $email) {
+            $this->updateEmail($uid, $email);
+        }
+
+        if (!empty($password)) {
+            if ($password == $password2) {
+                $this->resetPassword($uid, $password);
+            } else {
+                $this->setAlert("danger", "Passwords don't match");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * updateUsername
+     *
+     * @param int $uid
+     * @param str $username
+     *
+     * @return int success
+     */
+    function updateUsername($uid, $username) {
+        $stmt = $this->db->prepare("UPDATE user SET username = :username WHERE id = :uid");
+        $stmt->bindValue(":username", $username);
+        $stmt->bindValue(":uid", $uid);
+
+        $stmt->execute();
+
+        return $stmt->rowCount();
+    }
+ 
+    /**
+     *
+     * @param int $uid
+     * @param str $email
+     *
+     * @return int success
+     */
+    function updateEmail($uid, $email) {
+        $stmt = $this->db->prepare("UPDATE user SET email = :email WHERE id = :uid");
+        $stmt->bindValue(":email", $email);
+        $stmt->bindValue(":uid", $uid);
+
+        $stmt->execute();
+
+        return $stmt->rowCount();
+    }
+
 }

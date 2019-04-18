@@ -149,6 +149,17 @@ class Admin extends Controller
                 case 'reports':
                     $this->postManageReports();
                     break;
+                case 'edituser':
+                    $status = $this->model->user->updateUser($_POST["uid"], $_POST["username"],
+                        $_POST["email"],
+                        $_POST["password"],
+                        $_POST["password2"]);
+                    if ($status) {
+                        $this->model->setAlert("success", "User updated");
+                    }
+                    $this->redirectBack();
+
+                    exit;
                 case null:
                     $this->postManageAdmin();
                     break;
